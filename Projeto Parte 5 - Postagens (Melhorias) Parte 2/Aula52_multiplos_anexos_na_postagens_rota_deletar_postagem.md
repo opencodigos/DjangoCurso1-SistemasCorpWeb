@@ -1,4 +1,4 @@
-# **Multiplos Anexos na Postagem (Bonus)(**Deletar Imagem)
+# **Multiplos Anexos na Postagem (Bonus)(Deletar Imagem)**
 
 Dev: Letícia Lima
 
