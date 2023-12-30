@@ -1,4 +1,3 @@
-# Deploy
 # Deploy Django + Postgres, Nginx e Gunicorn no Ubuntu 22.04
 
 Dev: Letícia Lima
@@ -16,18 +15,18 @@ Referencia: [https://www.digitalocean.com/community/tutorials/how-to-set-up-djan
     
     **Por costume vou utilizar a DigitalOcean.**  
     
-    [DigitalOcean | Cloud Hosting for Builders](https://m.do.co/c/7b0eeb0b772c)
+    Crie uma conta: [DigitalOcean | Cloud Hosting for Builders](https://m.do.co/c/7b0eeb0b772c)
     
     Inicialmente voce pode criar uma conta gratuitamente e utilizar. No momento da criação da conta a digitalOcean vai pedir para confirmar a conta com algum cartão de credito ou pelo paypal.
     
-    ![Untitled](https://prod-files-secure.s3.us-west-2.amazonaws.com/a063a051-4fb5-4b47-ad10-54cee14f4f39/ae5e0045-0778-4445-abf7-7a4da9b4ea92/Untitled.png)
-    
+     ![image](https://github.com/djangomy/DjangoCurso1-SistemasCorpWeb/assets/58613583/f99f146c-47a1-4aff-8701-594519e7f155)
+
     Depois que ter criado o projeto precisamos criar nossa droplet para nossa aplicação Django.
     
     Vou criar um servidor com ubuntu 22.04, bem pequeno mesmo somente para configuração dessa aplicação.
     
-    ![Untitled](https://prod-files-secure.s3.us-west-2.amazonaws.com/a063a051-4fb5-4b47-ad10-54cee14f4f39/eac19f3c-fbe7-4783-9d42-4fe4ec721fe1/Untitled.png)
-    
+     ![image](https://github.com/djangomy/DjangoCurso1-SistemasCorpWeb/assets/58613583/7f349aa2-8cee-4fa3-be09-664feb40270c)
+
     vamos conectar no nosso servidor, voce pode usar o SSH ou pode entrar no proprio console do digitalOcean.
     
     ```python
