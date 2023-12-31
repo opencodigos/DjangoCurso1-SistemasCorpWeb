@@ -6,6 +6,8 @@
     
     Como estamos trabalhando com docker vamos criar uma imagem do Nginx para usar em conjunto com nossos outros serviços da aplicação.
     
+    https://uwsgi-docs.readthedocs.io/en/latest/Nginx.html
+    
     **Adicionar no arquivo requirements.txt**
     
     ```python
@@ -61,8 +63,8 @@
     Dentro dela vamos criar nosso arquivo Dockerfile
     
     ```python
-    FROM nginxinc/nginx-unprivileged:1-alpine # Imagem do nginx 
-    LABEL maintainer="Ngnix" # Label
+    FROM nginxinc/nginx-unprivileged:1-alpine
+    LABEL maintainer="Ngnix"
     
     # Copia arquivos necessarios para o container
     COPY ./default.conf.tpl /etc/nginx/default.conf.tpl
@@ -70,9 +72,12 @@
     COPY ./run.sh /run.sh
     
     # Crio 3 variais de ambiente para usar depois
-    ENV LISTEN_PORT=8000 #  configurar a porta na qual o serviço dentro do contêiner estará na conexões.
-    ENV APP_HOST=IP do servidor # Essa variável pode ser utilizada para configurar o host (endereço)
-    ENV APP_PORT=9000 # Porta da minha aplicação
+    #  configurar a porta na qual o serviço dentro do contêiner estará na conexões.
+    ENV LISTEN_PORT=8000
+    # Essa variável pode ser utilizada para configurar o host (endereço)
+    ENV APP_HOST= host
+    # Porta da minha aplicação
+    ENV APP_PORT=9000
     
     USER root # Entro com usuário root
     
@@ -90,7 +95,7 @@
     USER nginx # Muda para usuário do nginx
     
     # executado quando o contêiner é iniciado.
-    CMD ["/run.sh"] 
+    CMD ["/run.sh"]
     ```
     
     **run.sh**
@@ -240,7 +245,7 @@
     **Passar a pasta media para o servidor.** Por que a pasta media a gente não manda no commit. 
     
     ```python
-    scp -r media root@IP:/root/projects/site_sistema/SistemaCorp/
+    scp -r SistemaCorp/media root@IP:/site_sistema/SistemaCorp/
     ```
     
     Por fim depois de tudo configurado a gente roda o up/build para subire construir os container.
@@ -267,3 +272,59 @@
     O arquivo docker-compose.yml é arquivo de dev/teste para rodar local.
     
     </aside>
+    
+    ## **Correções**
+    
+    **Arquivos Static e Media não carregam** 
+    
+    ```python
+    server {
+        listen ${LISTEN_PORT};
+    
+        location /static/ {
+            alias /vol/web/static/;
+        } 
+        location / {
+            uwsgi_pass              ${APP_HOST}:${APP_PORT};
+            include                 /etc/nginx/uwsgi_params;
+            client_max_body_size    10M;
+        }
+    }
+    ```
+    
+    **O WhiteNoise é uma biblioteca do Django que permite servir arquivos estáticos diretamente através do servidor web em vez de depender de um servidor separado, como o Nginx. Aqui está um guia básico de como configurar o WhiteNoise:** https://whitenoise.readthedocs.io/en/latest/django.html
+    
+    settings.py
+    
+    ```python
+    add no requirements: whitenoise
+    
+    'whitenoise.middleware.WhiteNoiseMiddleware',
+    
+    STATIC_URL = '/static/'
+    MEDIA_URL = '/media/'
+    
+    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+    
+    STATIC_ROOT = '/vol/web/static'
+    MEDIA_ROOT = '/vol/web/media'
+    ```
+    
+    urls.py
+    
+    ```python
+    if settings.DEBUG:
+        urlpatterns += static(
+            settings.MEDIA_URL,
+            document_root=settings.MEDIA_ROOT,
+        )
+    ```
+    
+    **Firewell ou proxy (Não acessa IP)**
+    
+    ```python
+    sudo ufw enable
+    sudo ufw allow 22 80 8000 9000
+    ```
+    
+    Verifica o proxy do nginx se ta chamando a aplicação.
