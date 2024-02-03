@@ -1,0 +1,66 @@
+{% extends 'base_dashboard.html' %}
+{% block title %}Dashboard - Lista de Postagens{% endblock %}
+{% block content_dash %}
+<div class="p-3">
+    <div class="d-flex justify-content-between mb-3">
+        <button class="btn btn-secondary" onclick="location.href='{% url 'criar-postagem-forum' %}'">
+            <i class="fas fa-user mx-2"></i> + Criar Postagem</button>
+            
+        <form class="hstack gap-1" method="GET" action="?">
+            <input type="text" name="titulo" class="form-control" placeholder="Buscar por título" 
+                value="{{ request.GET.titulo }}">
+            <!-- Outros campos de filtro aqui, se necessário -->
+            <button class="btn btn-outline-secondary" type="submit"><i class="fas fa-search"></i></button>
+            {% if request.GET.titulo %}
+            <a href="{% url 'dash-lista-postagem-forum' %}" class="link-secondary">Resetar</a>
+            {% endif %}
+        </form>
+    </div>
+    <!-- table -->
+    <div class="table-responsive">
+        <table class="table table-light">
+            <thead class="table-light">
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Nome/Sobrenome</th>
+                    <th scope="col">Titulo</th>
+                    <th scope="col">Data Criação</th>
+                    <th scope="col">Data Publicação</th>
+                    <th scope="col">Ativo</th>
+                    <th scope="col">Acão</th>
+                </tr>
+            </thead>
+            
+            {% for postagem, form in form_dict.items %}
+            <tbody>
+                <tr>
+                    <td scope="row">{{ postagem.id }}</td>
+                    <td scope="row">{{ postagem.usuario.first_name }} {{ postagem.usuario.last_name }}</td>
+                    <td scope="row">{{ postagem.titulo }}</td>
+                    <td scope="row">{{ postagem.data_criacao|date:'d/m/Y'}}</td>
+                    <td scope="row">{{ postagem.data_publicacao|date:'d/m/Y'}}</td>
+                    <td scope="row">
+                        {% if postagem.ativo %}
+                        <span class="badge bg-success rounded-pill d-inline">Ativado</span> 
+                        {% else %}
+                        <span class="badge bg-danger rounded-pill d-inline">Desativado</span>  
+                        {% endif %}
+                    </td>
+                    <td scope="row">
+                        <a class="link-warning" href="{% url 'detalhe-postagem-forum' postagem.id %}"><i class="fas fa-eye mx-2"></i></a>
+                        <a class="ml-2 link-secondary" data-bs-toggle="modal" href="#editarPostagemModal{{postagem.id}}" role="button">
+                            <i class="far fa-file mx-2"></i></a>
+                        <a class="ml-3 link-danger" data-bs-toggle="modal" href="#confirmarExclusaoModal{{postagem.id}}" role="button"><i class="fas fa-trash mx-2"></i></a>
+                        {% include "modal-form-postagem-forum.html" %}
+                        {% include "modal-deletar-postagem-forum.html" %}
+                    </td>
+                </tr>
+            </tbody>
+            {% empty %}
+            <p>Nenhuma poste cadastrado.</p>
+            {% endfor %}
+        </table>
+    </div>
+    {% include 'components/paginacao.html' %}
+</div>
+{% endblock %}

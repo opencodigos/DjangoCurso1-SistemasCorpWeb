@@ -1,0 +1,48 @@
+{% if bloco.bloco.nome == 'CARDS' %}
+<section>
+    <div class="container py-lg-5">
+        <div class="row justify-content-center pb-5">
+            <div class="col-md-12 text-center">
+                <h2 class="mb-3">{{bloco.titulo}}</h2>
+                <p>{{bloco.descricao|default:""}}</p>
+            </div>
+        </div>
+        <div class="row g-4">
+            {% for card in bloco.conteudo.all %} 
+            <div class="col-md-6 d-flex align-self-stretch">
+                <div class="d-flex gap-4">
+                    <div class="rounded text-white p-5" style="background-color: {{card.cor_label}}">
+                        <i class="{{card.icone}}"></i>
+                    </div>
+                    <div class="media-body pl-md-4">
+                        <h3 class="text-dark text-decoration-none mb-3">{{card.titulo_1}}</h3>
+                        <p>{{card.descricao_1}}</p>
+                    </div>
+                </div>
+            </div>
+            {% endfor %} 
+        </div>
+    </div>
+</section>
+{% endif %}
+
+{% if bloco.bloco.nome == 'CARDS_2' %}
+<section>
+    <div class="container text-center py-lg-5">
+        <div class="row justify-content-center pb-5">
+            <div class="col-md-12">
+                <h2 class="mb-3">{{bloco.titulo}}</h2>
+            </div>
+        </div>
+        <div class="row gap-3">
+            {% for especialidade in bloco.conteudo.all %} 
+            <div class="col p-4 bg-light rounded-5">
+                <img src="{{especialidade.imagem.url}}" class="rounded-circle object-fit-cover" width="150" height="150" alt="">
+                <h3><a class="link-dark text-decoration-none" href="#">{{especialidade.titulo_1}}</a></h3>
+                <p>{{especialidade.descricao_1}}</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}

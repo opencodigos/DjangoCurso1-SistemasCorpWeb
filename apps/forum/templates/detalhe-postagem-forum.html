@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% block title %}Detalhes da Postagem{% endblock %} 
+{% block content %}
+<div class="container mt-3">
+    <div class="row">
+        <div class="col-md-8"> 
+            <div class="bg-light p-3">  
+                <div class="d-flex justify-content-between">
+                    <span>{{postagem.data_publicacao}}</span><br> 
+                    <div class="div"> 
+                        {% if postagem.usuario == request.user %}
+                        <a class="btn btn-warning" data-bs-toggle="modal" href="#editarPostagemModal{{postagem.id}}" role="button">
+                            <i class="fas fa-edit"></i></a>  
+                        <a class="btn btn-danger" data-bs-toggle="modal" 
+                            href="#confirmarExclusaoModal{{postagem.id}}" role="button"><i class="fas fa-trash"></i></a>  
+                        {% endif %}
+                    </div>
+                </div> 
+                <span>Autor: {{postagem.usuario.first_name}}</span>
+                <div class="mt-3">  
+                    <h2>{{postagem.titulo}}</h2>
+                    <p>{{postagem.descricao}}</p>
+                    {% for imagem in postagem.postagem_imagens.all %}
+                    <a data-bs-toggle="modal" href="#imagemModal{{imagem.id}}" role="button">
+                        <i class="link-info fas fa-image fa-2x me-2"></i></a>
+                    <div class="modal fade" id="imagemModal{{imagem.id}}" tabindex="-1" 
+                        aria-labelledby="imagemModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered modal-lg">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                <h2 class="modal-title fs-5" id="imagemModalLabel">
+                                    <i class="link-info fas fa-image fa-2x me-2"></i></h2>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <img src="{{ imagem.imagem.url }}" alt="Imagem da postagem" class="img-fluid">
+                                </div> 
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div> 
+            </div> 
+            {% include "comentarios/adcionar-comentario.html" %}
+            {% include "comentarios/lista-comentario.html" %}
+        </div>
+    </div>
+</div> 
+{% include "modal-form-postagem-forum.html" %}
+{% include "modal-deletar-postagem-forum.html" %}
+{% endblock %} 
+{% block scripts %}
+    <script> 
+        document.addEventListener("DOMContentLoaded", function () {
+            const formRemocao = document.getElementById("form-remocao");
+            const formRespRemocao = document.getElementById("form-resp-remocao");
+            
+            // Comentário Pai
+            formRemocao.addEventListener("submit", function (event) {
+                event.preventDefault();
+                const confirmacao = confirm("Tem certeza de que deseja remover o comentário?");
+                if (confirmacao) {
+                    formRemocao.submit();
+                }
+            });
+
+            // Comentário Filho
+            formRespRemocao.addEventListener("submit", function (event) {
+                event.preventDefault(); // Impede o envio padrão do formulário
+                const confirmacao = confirm("Tem certeza de que deseja remover o comentário?");
+                if (confirmacao) {
+                    formRespRemocao.submit();
+                }
+            });
+        });
+
+        
+    </script>
+{% endblock scripts %}

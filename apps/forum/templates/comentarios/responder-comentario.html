@@ -1,0 +1,17 @@
+<!-- Responder Comentario  -->
+<div class="collapse mt-2" id="responderComentario{{comentario.id}}"> 
+    <form method="POST" action="{% url 'responder-comentario' comentario.id %}"> 
+        {% csrf_token %}
+        {{ form_comentario.as_p }}
+        <div class="d-flex justify-content-between">  
+            <button type="submit" class="btn"><i class="fas fa-save fa-1x"></i> Salvar</button>    
+            <button class="btn btn-white-sm" type="button" 
+                data-bs-toggle="collapse" 
+                data-bs-target="#responderComentario{{comentario.id}}" 
+                aria-expanded="false" 
+                aria-controls="collapseResponderComentario">
+                <i class="fas fa-times fa-1x"></i>
+            </button>  
+        </div>  
+    </form> 
+</div>

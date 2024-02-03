@@ -1,0 +1,146 @@
+{% if bloco.bloco.nome == 'BANNER_1' %}
+<section>
+    <div class="container py-lg-5">
+        <div class="row">
+            {% for banner_1 in bloco.conteudo.all %} 
+            <div class="col-md-6 col-lg-5">
+                <div class="d-flex align-items-center">
+                    <img src="{{banner_1.imagem.url}}"
+                        class="rounded-5 object-fit-cover d-block w-100" height="550" alt="">
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-7 pl-lg-5 py-md-5">
+                <div class="row justify-content-start pb-3">
+                    <div class="col-md-12 p-4 p-lg-5">
+                        <span>{{banner_1.titulo_2|default:""}}</span>
+                        <h2 class="mb-4">{{banner_1.titulo_1|default:""}}</h2>
+                        <p>{{banner_1.descricao_1|default:""}}</p>
+                        <p>{{banner_1.descricao_2|default:""}}</p>
+                        <p> 
+                            {% if banner_1.titulo_botao_1 %}
+                            <a href="{% url ''|add:banner_1.rota_botao_1|add:'' %}" class="btn btn-primary py-3 px-4">{{banner_1.titulo_botao_1}}</a> 
+                            {% endif %}   
+                            {% if banner_1.titulo_botao_2 %}
+                            <a href="{% url ''|add:banner_1.rota_botao_2|add:'' %}" class="btn btn-primary py-3 px-4">{{banner_1.titulo_botao_2}}</a>
+                            {% endif %}  
+                        </p>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+{% if bloco.bloco.nome == 'BANNER_2' %}
+<section>
+    {% for banner_2 in bloco.conteudo.all %}
+    <div class="banner" style="background-image: url('{{banner_2.imagem.url}}');">
+        <div class="container">
+            <div class="row justify-content-center align-items-center">
+                <div class="col text-center">
+                    <span>{{banner_2.titulo_2|default:""}}</span>
+                    <h2 class="fw-bold">{{banner_2.titulo_1|default:""}}</h2>
+                    <p>{{banner_2.descricao_1|default:""}}</p>
+                    <p>{{banner_2.descricao_2|default:""}}</p>
+                    <p class="mb-0">
+                        {% if banner_2.titulo_botao_1 %}
+                        <a href="{% url ''|add:banner_2.rota_botao_1|add:'' %}" class="btn btn-primary py-3 px-4">{{banner_2.titulo_botao_1}}</a>
+                        {% endif %}
+                        {% if banner_2.titulo_botao_2 %}
+                        <a href="{% url ''|add:banner_2.rota_botao_2|add:'' %}" class="btn btn-primary py-3 px-4">{{banner_2.titulo_botao_2}}</a>
+                        {% endif %}
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div> 
+    {% endfor %}
+</section>
+{% endif %} 
+
+{% if bloco.bloco.nome == 'BANNER_3' %}
+<section>
+    <div class="container py-lg-5">
+        <div class="row">
+            {% for banner_3 in bloco.conteudo.all %}  
+            <div class="col-md-6 col-lg-7 pl-lg-5 py-md-5">
+                <div class="row justify-content-start pb-3">
+                    <div class="col-md-12 p-4 p-lg-5">
+                        <span>{{banner_3.titulo_2|default:""}}</span>
+                        <h2 class="mb-4">{{banner_3.titulo_1|default:""}}</h2>
+                        <p>{{banner_3.descricao_1|default:""}}</p>
+                        <p>{{banner_3.descricao_2|default:""}}</p>
+                        <p>
+                            {% if banner_3.titulo_botao_1 %}
+                            <a href="{% url ''|add:banner_3.rota_botao_1|add:'' %}" class="btn btn-primary py-3 px-4">{{banner_3.titulo_botao_1}}</a> 
+                            {% endif %}   
+                            {% if banner_3.titulo_botao_2 %}
+                            <a href="{% url ''|add:banner_3.rota_botao_2|add:'' %}" class="btn btn-secondary py-3 px-4">{{banner_3.titulo_botao_2}}</a>
+                            {% endif %}  
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-5">
+                <div class="d-flex align-items-center">
+                    
+                    <img src="{{banner_3.imagem.url}}"
+                        class="rounded-5 object-fit-cover d-block w-100" height="550" alt="">
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+{% if bloco.bloco.nome == 'BANNER_4' %}
+<section>
+    {% for banner_4 in bloco.conteudo.all %}
+    <div class="banner" style="background-image: url('{{banner_4.imagem.url}}');">
+        <div class="container py-lg-5">
+            <div class="row d-flex align-items-center">
+                <div class="col-md-5">
+                    <span>{{banner_4.titulo_2|default:""}}</span>
+                    <h2 class="mb-4 fs-1">{{banner_4.titulo_1|default:""}}</h2>
+                    <p class="mb-0 fs-2">
+                        {% if banner_4.titulo_botao_1 %}
+                        <a href="{% url ''|add:banner_4.rota_botao_1|add:'' %}" class="btn btn-outline-primary py-3 px-4">{{banner_4.titulo_botao_1}}</a>
+                        {% endif %}
+                        {% if banner_4.titulo_botao_2 %}
+                        <a href="{% url ''|add:banner_4.rota_botao_2|add:'' %}" class="btn btn-primary py-3 px-4">{{banner_4.titulo_botao_2}}</a>
+                        {% endif %}
+                    </p>
+                </div>
+                <div class="col-md-7">
+                    <div class="row pt-4">
+                        <div class="col-md-6 d-flex justify-content-center">
+                            <div class="fs-2 text-bg-primary"> 
+                                <span>{{banner_4.descricao_1|default:""}}</span>
+                            </div>
+                        </div>
+                        <div class="col-md-6 d-flex justify-content-center">
+                            <div class="fs-2 text-bg-secondary">
+                                <span>{{banner_4.descricao_2|default:""}}</span>
+                            </div>
+                        </div>
+                        <div class="col-md-6 d-flex justify-content-center">
+                            <div class="fs-2 text-bg-primary">
+                                <span>{{banner_4.descricao_3|default:""}}</span>
+                            </div>
+                        </div>
+                        <div class="col-md-6 d-flex justify-content-center">
+                            <div class="fs-2 text-bg-secondary">
+                                <span>{{banner_4.descricao_4|default:""}}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</section>
+{% endif %}

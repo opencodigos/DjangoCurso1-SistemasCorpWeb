@@ -1,0 +1,53 @@
+{% load static %}
+<div class="mt-3">
+	<h4>Comentários</h4>
+	<p>Total de Comentários: {{ postagem.postagem_comentario.all|length }}</p>
+	{% for comentario  in postagem.postagem_comentario.all %}
+	{% if comentario.is_parent %}
+	<div class="d-flex mt-4"> 
+	    <div class="bg-light border rounded-3 w-100 p-3">
+	        <div class="d-flex justify-content-between">  
+	            <div>
+					{% if comentario.usuario.perfil.foto %} 
+	                <img src="{{comentario.usuario.perfil.foto.url}}" class="rounded-circle mr-2" width="30" height="30"> 
+	                {% else %}
+					<img src="{% static 'images/perfil/foto-padrao.jpg' %}" class="rounded-circle mr-2" width="30" height="30">
+					{% endif %}
+					<strong class="fst-italic">{{comentario.usuario.first_name}} {{comentario.usuario.last_name}}</strong>
+	            </div>  
+	            <span class="mx-3 fst-italic">{{comentario.data_criacao}}</span> 
+	        </div> 
+	        <p class="text-break mx-3 mt-3">{{comentario.comentario}}</p> 
+	        <div class="d-flex justify-content-start">  
+	            {% if request.user == comentario.usuario %}
+
+	            <a href="#" class="link-success" data-bs-toggle="collapse" 
+					data-bs-target="#editarComentario{{comentario.id}}" 
+                	aria-expanded="false" 
+					aria-controls="collapseEditarComentario"><i class="fas fa-edit mx-2"></i></a>
+
+	            <!-- <a href="#" class="link-danger"><i class="fas fa-trash fa-1x mx-1"></i></a>  -->
+				<form id="form-remocao" method="POST" action="{% url 'deletar-comentario' comentario.id %}">
+					{% csrf_token %}
+					<button type="submit" class="link-danger btn btn-transparent m-0 p-0">
+						<i class="fas fa-trash fa-1x mx-1"></i>
+					</button>
+				</form> 
+			 
+	            {% endif %}   
+	            {% if user.is_authenticated %}  
+	            <a href="#" class="link-secondary"
+					data-bs-toggle="collapse"
+					data-bs-target="#responderComentario{{comentario.id}}" 
+                	aria-expanded="false"
+					aria-controls="collapseResponderComentario"><i class="fa fa-reply fa-1x mx-1"></i>Responder</a>
+	            {% endif %}   
+	        </div>  
+	    </div>  
+	</div>
+	{% include "comentarios/editar-comentario.html" %}
+	{% include "comentarios/responder-comentario.html" %}
+	{% include "comentarios/lista-responder-comentario.html" %}
+	{% endif %}
+	{% endfor %}
+</div> 

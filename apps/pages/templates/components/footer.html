@@ -1,0 +1,33 @@
+{% if bloco.bloco.nome == 'FOOTER' %}
+<section>
+    <div class="container">
+        <footer class="row row-cols-1 row-cols-sm-2 row-cols-md-5 py-5 my-5 border-top">
+            {% for footer in bloco.conteudo.all %}      
+            <div class="col-md-2 mb-3 {% if forloop.first %}col-md-5{% endif %}{% if forloop.last %}col-md-3{% endif %}">
+                {% if footer.imagem %}
+                <img src="{{footer.imagem.url}}" alt="{{footer.id}}" width="150">
+                {% endif %}
+              <h5>{{footer.titulo_1}}</h5>
+              <ul class="nav flex-column">
+                {{footer.descricao_2|safe}}
+              </ul>
+            </div> 
+            {% endfor %} 
+          </footer> 
+    </div>  
+	<div class="container">
+		<footer class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top">
+			<div class="col-md-4 d-flex align-items-center">
+				<a href="/" class="mb-3 me-2 mb-md-0 text-body-secondary text-decoration-none lh-1">
+					<svg class="bi" width="30" height="24"><use xlink:href="#bootstrap"></use></svg>
+				</a>
+                {% for footer in bloco.conteudo.all %}  
+                {% if forloop.first %}
+				<span class="mb-3 mb-md-0 text-body-secondary">{{footer.descricao_1}}</span>
+                {% endif %}
+                {% endfor %}
+			</div> 
+		</footer>
+	</div>
+</section>
+{% endif %}

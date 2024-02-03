@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Perfil{% endblock title %}
+{% block content %} 
+<div class="container mt-3">
+    <div class="d-flex flex-wrap gap-5 justify-content-center align-items-center">
+        <div class="d-flex flex-column">  
+            {% if obj.perfil.foto %}
+            <img src="{{obj.perfil.foto.url}}" class="img-thumbnail border rounded" width="280" alt="">  
+            {% else %}
+            <img src="{% static 'images/perfil/foto-padrao.jpg' %}" class="img-thumbnail border rounded" width="280" alt="">
+            {% endif %}  
+            {% if request.user == obj.perfil.usuario or request.user.is_superuser %}
+            <a class="btn btn-warning" href="{% url 'editar-perfil' obj.username %}" role="button">
+                <i class="fas fa-cog"></i> Editar Perfil
+            </a>
+            {% endif %} 
+        </div> 
+        <div class="perfil-info mt-3"> 
+            <h2>{{obj.first_name}} {{obj.last_name}}</h2>
+            <p><strong>Data Criação:</strong> {{obj.date_joined|date:'d/m/Y'}}</p>
+            <p><strong>Ocupação:</strong> {{obj.perfil.ocupacao}}</p>
+            <p><strong>Descrição:</strong> {{obj.perfil.descricao}}</p>
+            <p><strong>Genero:</strong> {{obj.perfil.genero}}</p>
+            <div class="d-flex gap-3"> 
+                <p><strong>Telefone:</strong> {{obj.perfil.telefone}}</p>
+                <p><strong>Cidade:</strong> {{obj.perfil.cidade}}</p>
+                <p><strong>País:</strong> {{obj.perfil.estado}}</p>   
+            </div>
+        </div>
+    </div> 
+    <hr> 
+
+
+    <div class="row g-2 mt-5">
+        <div class="col-md-4 bg-light">
+            <form class="hstack gap-1" method="GET" action="?">
+                <input type="text" name="titulo" class="form-control" placeholder="Buscar por título" 
+                    value="{{ request.GET.titulo }}">
+                <!-- Outros campos de filtro aqui, se necessário -->
+                <button class="btn btn-outline-secondary" type="submit"><i class="fas fa-search"></i></button>
+                {% if request.GET.titulo %}
+                <a href="{% url 'perfil' obj.username %}" class="link-secondary">Resetar</a>
+                {% endif %}
+            </form>
+        </div>
+        <div class="col-md-8"> 
+
+            <!-- Coloca a lista de produtos aqui -->
+            {% for postagem, form in form_dict.items %}
+            <div class="p-3 mb-3 rounded-3 shadow-sm">
+                <div class="align-items-center">
+                    <div class="d-flex justify-content-between">
+                        <h5><a href="{% url 'detalhe-postagem-forum' postagem.slug %}">{{postagem.titulo}}</a></h5>
+                        <div class="div">
+                            {% if postagem.usuario == request.user %}
+                            <a class="btn btn-warning" data-bs-toggle="modal" 
+                                href="#editarPostagemModal{{postagem.id}}" role="button">
+                                <i class="fas fa-edit"></i></a>  
+                            <a class="btn btn-danger" data-bs-toggle="modal" href="#confirmarExclusaoModal{{postagem.id}}" role="button"><i class="fas fa-trash"></i></a>  
+                            {% endif %}
+                        </div>
+                    </div>  
+                    <div class="text-truncate-box"> 
+                        <p class="text-truncate">{{postagem.descricao|truncatechars:230}}</p> 
+                    </div>
+                </div>
+                <div class="d-flex justify-content-between align-items-center">
+                    <div class="align-items-center">
+                        <small class="text-muted">{{postagem.data_publicacao}}</small>
+                    </div>
+                </div>
+            </div>
+            {% include "modal-form-postagem-forum.html" %} 
+            {% include "modal-deletar-postagem-forum.html" %}
+            {% endfor %}
+            {% include 'components/paginacao.html' %} 
+        </div> 
+    </div> 
+</div>
+{% endblock %}

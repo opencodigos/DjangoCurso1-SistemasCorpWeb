@@ -1,0 +1,31 @@
+{% extends 'base_dashboard.html' %}
+{% block title %}Formulário Alterar Usuário{% endblock %}
+{% block content_dash %}
+<div class="row p-5 bg-light">
+    <h3>Atualizar Usuário</h3>
+    <form method="post">
+        {% csrf_token %}
+        {% for field in form %} 
+        {% if field == form.email %}
+        <div class="col-md-12">
+            <div class="mt-3">
+            {{ field.label_tag }}
+            {{ field }}
+            </div>
+        </div>
+        {% endif %}
+        {% if not field == form.email %}
+        <div class="col-md-6">
+            <div class="mt-3">
+            {{ field.label_tag }}
+            {{ field }}
+            </div>
+        </div>
+        {% endif %}
+        {% endfor %}
+        <div class="mt-3">
+            <button type="submit" class="btn btn-primary mt-3">Alterar</button> 
+        </div>
+    </form>  
+</div>
+{% endblock %}

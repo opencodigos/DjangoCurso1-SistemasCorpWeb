@@ -1,0 +1,33 @@
+{% extends "base_dashboard.html" %}
+{% block title %}Editar Perdil{% endblock %}
+{% load static %}
+{% block content_dash %}
+<div class="row"> 
+    <div class="col-md-8">
+        <form class="row p-3 rounded-3 shadow-sm" method="post" action="?" 
+            enctype="multipart/form-data">
+            {% csrf_token %}
+            <h4>Editar Informações Pessoais</h4>
+            <p>Perfil {{obj.username}}</p>
+            <div class="col"> 
+                {% if obj.perfil.foto %}
+                <img src="{{obj.perfil.foto.url}}" class="img-fluid rounded" alt="{{obj.username}}" width="100">
+                {% else %}
+                <img src="{% static 'images/perfil/foto-padrao.jpg' %}" class="img-fluid rounded" width="100" alt="">
+                {% endif %}  
+
+                {{ form_perfil.as_p }}
+            </div>
+            <div class="col">
+                <p>Informações da Conta do Usuário</p>
+                {{ form_contas.as_p }}
+            </div> 
+            <div class="div">
+                <input type="hidden" name="redirect_route" value="{{ request.path }}">
+                <button type="submit" class="btn btn-primary">Salvar</button>
+                <button type="button" class="btn btn-secondary">Cancelar</button>
+            </div>
+        </form>
+    </div> 
+</div> 
+{% endblock %}

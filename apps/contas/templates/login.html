@@ -1,0 +1,21 @@
+{% extends 'base_auth.html' %}
+{% block title %}Login{% endblock %}
+{% block content_auth %}
+<form method="post" action="{% url 'login' %}">
+    {% csrf_token %}
+    <h4>Login</h4>
+    <div class="mt-3">
+        <label for="email">Email:</label>
+        <input type="email" name="email" class="form-control" required>
+    </div>  
+    <div class="mt-3">
+        <label for="password">Senha:</label>
+        <input type="password" name="password" class="form-control" required>
+    </div>
+    <button type="submit" class="btn btn-primary mt-3">Entrar</button>
+    <div class="mt-3">
+        <span>Ainda não tem conta? <a class="text-reset" href="{% url 'register' %}">Cadastre-se</a></span><br>
+        <span>Esqueceu sua senha? <a class="text-reset" href="{% url 'password_reset' %}">Resetar</a></span>
+    </div>  
+</form>   
+{% endblock %}

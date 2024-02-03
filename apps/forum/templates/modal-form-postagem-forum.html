@@ -1,0 +1,54 @@
+<div class="modal modal-lg fade" id="editarPostagemModal{{postagem.id}}" tabindex="-1" 
+	aria-labelledby="editarPostagemModalLabel" aria-hidden="true"> 
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4>Editar Postagem</h4>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+                <form method="post" action="{% url 'editar-postagem-forum' postagem.slug %}" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+					<input type="hidden" name="redirect_route" value="{{ request.path }}"> 
+                    <button type="submit" class="btn btn-primary mx-2">Salvar</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                </form>
+
+				<div class="d-flex g-3">
+
+					{% for img in postagem.postagem_imagens.all %}
+						<div class="position-relative p-2 div-imagem">
+							<a href="#" class="position-absolute badge bg-danger remover-imagem" data-imagem-id="{{img.id}}">
+								<i class="fas fa-times"></i>
+							</a>
+							<img src="{{ img.imagem.url }}" class="img-fluid rounded" alt="{{img.id}}" width="100"> 
+						</div>
+					{% endfor %}
+
+ 				</div>
+
+
+			</div>
+		</div>
+	</div>
+</div> 
+
+<script src="https://code.jquery.com/jquery-3.6.4.min.js" integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
+<script>
+	$('.remover-imagem').click(function(e) {
+		e.preventDefault();
+		var imageId = $(this).data('imagem-id'); // Aqui vai retorna o id da imagem 
+		$.ajax({
+			type: 'GET',
+			url: '{% url "remover-imagem" %}',
+			data: {'imagem_id': imageId}, // Envia para rota onde deleta a imagem
+			datatype: "json",
+			success: function (data) { // vamos ter um reforno
+				console.log(data)
+				// Remover a div da imagem do DOM
+				$(e.target).closest('.div-imagem').remove(); // No template removo essa imagem. Trata no frontend.
+			}, 
+		});
+	});
+</script>

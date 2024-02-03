@@ -1,0 +1,21 @@
+<form action="" method="post">
+    {% csrf_token %} 
+    <div class="mt-3">
+        {{ form.old_password.errors }}
+        <label class="form-label" for="id_old_password">Senha Antiga:</label>
+        <input type="password" name="old_password" class="form-control" id="id_old_password">
+    </div>
+   
+    <div class="mt-3">
+        {{ form.new_password1.errors }}
+        <label class="form-label" for="id_new_password1">Nova Senha:</label>
+        <input type="password" name="new_password1" class="form-control" id="id_new_password1">
+    </div>
+
+    <div class="mt-3">
+        {{ form.new_password2.errors }}
+        <label class="form-label" for="id_new_password2">Confirmação de senha:</label>
+        <input type="password" name="new_password2" class="form-control" id="id_new_password2">
+    </div>
+    <button type="submit" class="btn btn-secondary mt-3">Alterar Senha</button>
+</form>

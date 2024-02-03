@@ -1,0 +1,15 @@
+<div class="mt-5">  
+    {% if user.is_authenticated %} 
+    <form method="POST" action="{% url 'adicionar-comentario' postagem.slug %}">
+        {% csrf_token %}
+        {{ form_comentario.as_p }}
+        <button type="submit" class="btn btn-outline-primary">Enviar</button>
+    </form> 
+    {% else %} 
+    <div class="text-center mb-3">
+        <h4>Olá,</h4>
+        <p>Você precisa fazer login no sistema para comentar.</p>
+        <a class="btn btn-dark" href="{% url 'login' %}"><i class="fas fa-sign-in-alt fa-2x"></i></a>
+    </div>  
+    {% endif %} 
+  </div>

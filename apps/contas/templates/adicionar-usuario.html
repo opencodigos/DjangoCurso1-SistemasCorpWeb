@@ -1,0 +1,44 @@
+{% extends 'base_dashboard.html' %}
+{% block title %}Adicionar Usuário{% endblock %}
+{% block content_dash %}
+<div class="p-5 bg-light">
+    <form class="row" method="POST" autocomplete="off" enctype="multipart/form-data">
+        {% csrf_token %}  
+        <h4>Dados Conta Usuário (Principal)</h4>
+        {% for field in user_form %}
+        {% if field == user_form.email %}
+        <div class="col-md-12">
+            <div class="mt-3">
+            {{ field.label_tag }}
+            {{ field }}
+            </div>
+        </div>
+        {% endif %}
+        {% if not field == user_form.email %}
+        <div class="col-md-6">
+            <div class="mt-3">
+            {{ field.label_tag }}
+            {{ field }}
+            </div>
+        </div>
+        {% endif %}
+        {% endfor %} 
+
+        <div class="mt-5">
+            <h4>Dados Usuário (Perfil)</h4>
+        </div>
+        {% for field in perfil_form %} 
+        <div class="col-md-6">
+            <div class="mt-3">
+            {{ field.label_tag }}
+            {{ field }}
+            </div>
+        </div>
+        {% endfor %} 
+
+        <div class="mt-3">
+            <button class="btn btn-primary mt-3" type="submit">Criar</button>
+        </div>  
+    </form>  
+</div>
+{% endblock %}

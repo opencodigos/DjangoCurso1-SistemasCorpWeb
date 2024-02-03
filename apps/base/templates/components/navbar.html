@@ -1,0 +1,48 @@
+<nav class="navbar navbar-expand-lg bg-light" style="height: 70px;">
+    <div class="container-fluid bg-light">
+        <img src="{{ logo.image.url }}" width="150" alt="{{ logo.title }}" title="{{ logo.title }}" class="logo">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="{% url 'home' %}">Inicio</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'lista-postagem-forum' %}">Forum (QA)</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'sobre' %}">Sobre</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'faq' %}">FAQ</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'contato' %}">Contato</a>
+                </li>
+            </ul>
+            <form class="d-flex" role="search">
+                <input type="search" name="titulo" class="form-control me-2" placeholder="Buscar por título" 
+	                aria-label="Search" value="{{ request.GET.titulo }}">
+                <button class="btn btn-success" type="submit">Pesquisar</button>
+            </form>
+            {% if user.is_authenticated %}
+            <button class="btn btn-success mx-2" onclick="location.href='{% url 'criar-postagem-forum' %}'">
+                <i class="fas fa-plus"></i> Criar Postagem</button>
+            <button class="btn btn-warning mx-2" type="submit"  onclick="location.href='{% url 'painel' %}'">
+                <i class="fas fa-cog"></i></button>
+            <span class="p-2">
+                <a class="nav-link" href="{% url 'perfil' user.username %}">
+                    <i class="fas fa-user mx-2"></i>{{user.first_name}} {{user.last_name}}
+                </a>
+            </span>
+            <button class="btn btn-danger" data-bs-toggle="modal" href="#logoutModal">Logout</button>
+            {% else %}
+            <button class="btn btn-primary mx-2" onclick="location.href='{% url 'login' %}'">Entrar</button>
+            <button class="btn btn-warning" onclick="location.href='{% url 'register' %}'">Cadastrar-se</button>
+            {% endif %}
+        </div>
+    </div>
+</nav>

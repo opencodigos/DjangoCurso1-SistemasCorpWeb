@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block title %}Pagina 1{% endblock %}
+
+{% block content %}
+
+  {% for bloco in blocos %}
+    {% include "components/slide.html" %}
+    {% include "components/banner.html" %}
+    {% include "components/cards.html" %} 
+    {% include "components/faq.html" %} 
+    {% include "components/contato.html" %} 
+    {% include "components/footer.html" %} 
+  {% endfor %}
+
+{% endblock %}

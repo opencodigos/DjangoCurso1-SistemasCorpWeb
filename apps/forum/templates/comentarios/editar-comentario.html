@@ -1,0 +1,18 @@
+<!-- Editar Comentario  -->
+<div class="collapse mt-2" id="editarComentario{{comentario.id}}"> 
+    <form method="POST" action="{% url 'editar-comentario' comentario.id %}"> 
+        {% csrf_token %}
+        <textarea class="form-control" rows="3" name="comentario" id="comentario" 
+            placeholder="Escreva um comentário...">{{comentario.comentario}}</textarea>  
+         <div class="d-flex justify-content-between">  
+            <button type="submit" class="btn"><i class="fas fa-save fa-1x"></i> Salvar</button>    
+            <button class="btn btn-white-sm" type="button" 
+                data-bs-toggle="collapse" 
+                data-bs-target="#editarComentario{{comentario.id}}" 
+                aria-expanded="false" 
+                aria-controls="collapseEditarComentario">
+                <i class="fas fa-times fa-1x"></i>
+            </button>  
+        </div>  
+    </form> 
+</div> 

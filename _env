@@ -1,0 +1,19 @@
+## Não precisa colocar "" aspas
+SECRET_KEY=django-insecure-uwx*g5p#-%qb50y9rx8s97=%&8t-8qq89zqi94ao4h+x6vm%md
+DEBUG=True
+SUPER_USER=ADMIN
+EMAIL=leticiateste@gmail.com
+
+NAME_DB=db.sqlite3
+USER_DB=root
+PASSWORD_DB=
+HOST_DB=localhost
+PORT_DB=3306
+
+EMAIL_HOST=smtp.office365.com
+EMAIL_HOST_USER=email@hotmail.com
+EMAIL_HOST_PASSWORD=sua_senha
+EMAIL_PORT=587 
+EMAIL_USE_TLS=True 
+DEFAULT_FROM_EMAIL=email@hotmail.com
+SERVER_EMAIL=DEFAULT_FROM_EMAIL

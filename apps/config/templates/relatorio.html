@@ -1,0 +1,21 @@
+{% extends 'base_dashboard.html' %}
+{% block title %}Relatórios{% endblock %}
+{% block content_dash %}  
+<div class="row row-cols-1 row-cols-md-3 g-4"> 
+
+	<div class="col" style="width: 25rem;">   
+		<div class="card h-100 border-0 bg-white shadow-sm">
+			<div class="card-body py-5 text-center">
+				<h2 class="card-title">Postagens</h2>
+				<p class="card-text">Lista de Postagens</p>
+			</div>
+			<div class="d-grid col-10 mx-auto p-5">  
+				<button class="btn btn-info btn-lg w-100" 
+					onclick="location.href='{% url 'dash-lista-postagem-forum' %}'">
+					Acessar</button> 
+			</div>
+		</div> 
+	</div>  
+	<!-- Outros -->  
+</div> 
+{% endblock %}

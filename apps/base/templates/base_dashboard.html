@@ -1,0 +1,79 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	{% include "components/head.html" %}
+</head> 
+<body> 
+    {% include "components/logout.html" %}
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg bg-secondary fixed-top" style="height: 70px">
+        <div class="container-fluid"> 
+            <a class="navbar-brand mx-5" href="/">
+                <img src="{{ logo.image.url }}" width="150" alt="{{ logo.title }}" title="{{ logo.title }}" class="logo">
+            </a>
+            <a class="navbar-toggler border-0" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
+                <i class="link-light fas fa-align-left fa-2x me-3"></i> 
+            </a>
+            <div class="navbar-nav ms-auto d-flex flex-row">
+                <a class="link-light p-2" href="{% url 'perfil' user.username %}">
+                    <i class="fas fa-user mx-2"></i>{{user.first_name}} {{user.last_name}}
+                </a>
+                <button class="btn btn-danger" data-bs-toggle="modal" href="#logoutModal">Logout</button>
+            </div>
+        </div> 
+    </nav>
+
+    <!-- Sidebar -->
+    <div id="sidebarMenu" class="collapse d-lg-block sidebar collapse bg-secondary">
+        <div class="list-group gap-2">
+            <button type="button" class="btn btn-warning active" aria-current="true" onclick="location.href='{% url 'home' %}'">
+								<i class="fas fa-arrow-left me-2"></i>Site</button>
+
+            <button type="button" class="btn btn-light" aria-current="true" 
+                onclick="location.href='{% url 'painel' %}'">
+                <i class="fas fa-tachometer-alt me-2"></i>Painel</button>
+
+            <button type="button" class="btn btn-light" onclick="location.href='{% url 'relatorio' %}'">
+                    <i class="fas fa-file-alt me-2"></i>Relatórios</button>
+
+            {% if perms.contas.view_myuser %}
+            <button type="button" class="btn btn-light" onclick="location.href='{% url 'lista_usuarios' %}'">
+                            <i class="fas fa-users me-2"></i>Usuários do Sistema</button>
+            {% endif %}
+                        
+            <button type="button" class="btn btn-light" onclick="location.href='{% url 'configuracao' %}'">
+                <i class="fas fa-cog me-2"></i>Configurações</button>
+        </div>
+    </div>
+
+    <!-- Container -->
+    <div class="bloco"> 
+        {% include 'components/message.html' %} 
+        <div class="p-3">
+            {% block content_dash %} 
+            {% endblock %}   
+        </div> 
+    </div>
+
+    <footer class="nav-bottom py-2 bg-light mt-auto fixed-bottom">
+        <div class="container-fluid px-4 mt-auto">
+            <div class="d-flex align-items-center justify-content-between">
+                <div class="text-muted">
+                    <a>Core</a>
+                </div>
+                <div class="text-muted">
+                    <a>Release 1.0.0 <br> Patch 01</a>
+                </div>
+                <a class="text-muted">2023 Copyright &copy; Nome</a>
+                <div>
+                    <a class="text-muted" href="#">Politica de Privacidade</a>
+                    &middot;
+                    <a class="text-muted" href="#">Termos &amp; de condições</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+    {% include "components/scripts.html" %}
+</body>
+</html>

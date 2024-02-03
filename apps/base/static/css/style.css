@@ -1,0 +1,57 @@
+@import url('global.css');
+
+.sidebar {
+    position: fixed;
+    height: 100%;
+    padding: 10px 15px 0;
+    z-index: 0;
+    width: 250px;
+}
+
+.sidebar button {
+    height: 60px;
+}
+
+.bloco {
+    margin: 70px 0px 70px 0px;
+}
+
+.pagination .page-link {
+    background: var(--button-hover);
+    color: var(--main-color);
+    border: none;
+} 
+ 
+.banner { 
+    padding: 8em 0;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+    position: relative;
+    width: 100%;
+    object-fit: cover ;
+}
+
+@media (min-width: 968px) {
+    .bloco {
+        padding-left: 250px;
+    }
+
+    /* .collapse:not(.show) {
+        display: flex;
+    } */
+}
+
+@media (max-width: 968px) {
+    .sidebar {
+        width: 100%;
+    }
+
+    .navbar-brand {
+        display: none;
+    }
+
+    footer {
+        display: none;
+    }
+}
