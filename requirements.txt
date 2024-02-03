@@ -14,3 +14,6 @@ six==1.16.0
 sqlparse==0.4.4
 typing_extensions==4.9.0
 tzdata==2023.3
+whitenoise
+uWSGI>=2.0.22,<3.0
+

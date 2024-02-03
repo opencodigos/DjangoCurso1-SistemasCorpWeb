@@ -19,10 +19,7 @@ from corsheaders.defaults import default_headers
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 TEMPLATE_DIR = os.path.join(BASE_DIR,'templates')
 STATIC_DIR=os.path.join(BASE_DIR,'static')
-
-# Adicionar essa tag para que nosso projeto encontre o .env
-load_dotenv(os.path.join(BASE_DIR, ".env"))
-
+ 
 # Diz para Django onde estão nossos aplicativos
 APPS_DIR = str(os.path.join(BASE_DIR,'apps'))
 sys.path.insert(0, APPS_DIR)
@@ -31,27 +28,48 @@ sys.path.insert(0, APPS_DIR)
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.getenv("SECRET_KEY")
+SECRET_KEY = os.getenv('SECRET_KEY', 'changeme')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv('DEBUG')
+DEBUG = bool(int(os.getenv('DEBUG', 0)))
 
-ALLOWED_HOSTS = [ 
-    'localhost', 
-    '127.0.0.1',
-]
+ALLOWED_HOSTS = []
+ALLOWED_HOSTS.extend(
+    filter(
+        None,
+        os.getenv('ALLOWED_HOSTS', '').split(','),
+    )
+)
 
+# CORS
 CORS_ALLOW_HEADERS = list(default_headers) + [
     'X-Register',
 ]
 
-# CORS Config
-CORS_ORIGIN_ALLOW_ALL = True  
-# CORS_ORIGIN_ALLOW_ALL como True, o que permite que qualquer site acesse seus recursos.
-# Defina como False e adicione o site no CORS_ORIGIN_WHITELIST onde somente o site da lista acesse os seus recursos.
-CORS_ALLOW_CREDENTIALS = False 
-CORS_ORIGIN_WHITELIST = ['http://meusite.com',] # Lista.
+# Configuração para permitir todas as origens no CORS (Cross-Origin Resource Sharing).
+# NÃO UTILIZE EM PRODUÇÃO se CORS_ORIGIN_ALLOW_ALL estiver definido como True.
+CORS_ORIGIN_ALLOW_ALL = bool(int(os.getenv('CORS_ORIGIN_ALLOW_ALL', 0)))
 
+# Configuração para permitir credenciais no CORS (por exemplo, cookies).
+CORS_ALLOW_CREDENTIALS = bool(int(os.getenv('CORS_ALLOW_CREDENTIALS', 0)))
+
+# Lista de origens confiáveis para CSRF (Cross-Site Request Forgery).
+CSRF_TRUSTED_ORIGINS = []
+CSRF_TRUSTED_ORIGINS.extend(
+    filter(
+        None,
+        os.getenv('CSRF_TRUSTED_ORIGINS', '').split(','),
+    )
+)
+
+# Lista de origens permitidas no CORS.
+CORS_ALLOWED_ORIGINS = []
+CORS_ALLOWED_ORIGINS.extend(
+    filter(
+        None,
+        os.getenv('CORS_ALLOWED_ORIGINS', '').split(','),
+    )
+)
 
 if not DEBUG:
 	SECURE_SSL_REDIRECT = True
@@ -97,6 +115,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'requestlogs.middleware.RequestLogsMiddleware', # Logs
 ]
 
@@ -134,15 +153,14 @@ AUTH_USER_MODEL = "contas.MyUser"
 # Banco de Dados.
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, os.getenv('NAME_DB')),
-			#'USER':os.getenv('USER_DB')
-			#'PASSWORD': os.getenv('PASSWORD_DB')
-			#'HOST':os.getenv('HOST_DB')
-			#'PORT':os.getenv('PORT_DB') 
-	}
+        'ENGINE': os.getenv('POSTGRES_ENGINE'),
+        'NAME': os.getenv('POSTGRES_DB'),
+        'USER': os.getenv('POSTGRES_USER'),
+        'PASSWORD': os.getenv('POSTGRES_PASSWORD'),
+        'HOST': os.getenv('POSTGRES_HOST'),
+        'PORT': os.getenv('POSTGRES_PORT'),
+    }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
@@ -167,30 +185,30 @@ REST_FRAMEWORK={
 }
 
 # Logs
-LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'handlers': {
-        'requestlogs_to_file': {
-            'level': 'INFO',
-            'class': 'logging.FileHandler',
-            'filename': 'info.log',
-        },
-    },
-    'loggers': {
-        'requestlogs': {
-            'handlers': ['requestlogs_to_file'],
-            'level': 'INFO',
-            'propagate': False,
-        },
-    },
-}
+# LOGGING = {
+#     'version': 1,
+#     'disable_existing_loggers': False,
+#     'handlers': {
+#         'requestlogs_to_file': {
+#             'level': 'INFO',
+#             'class': 'logging.FileHandler',
+#             'filename': 'info.log',
+#         },
+#     },
+#     'loggers': {
+#         'requestlogs': {
+#             'handlers': ['requestlogs_to_file'],
+#             'level': 'INFO',
+#             'propagate': False,
+#         },
+#     },
+# }
 
 
-REQUESTLOGS = {
-    'SECRETS': ['password', 'token'],
-    'METHODS': ('PUT', 'PATCH', 'POST', 'DELETE'),
-}
+# REQUESTLOGS = {
+#     'SECRETS': ['password', 'token'],
+#     'METHODS': ('PUT', 'PATCH', 'POST', 'DELETE'),
+# }
 
 # timeout tempo de inatividate no sistema
 # SESSION_EXPIRE_SECONDS = 1800 # 30 minuts
@@ -221,15 +239,13 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-STATIC_ROOT = os.path.join(BASE_DIR,'static')
-STATIC_URL = '/static/' 
-
-# STATICFILES_DIRS = [ # talvez em Produção podesse usar assim.
-#     BASE_DIR / 'static',
-# ]
-
-MEDIA_ROOT=os.path.join(BASE_DIR,'media')
+STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
+
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+STATIC_ROOT = '/vol/web/static'
+MEDIA_ROOT = '/vol/web/media'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field

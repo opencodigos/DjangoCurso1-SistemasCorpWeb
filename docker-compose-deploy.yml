@@ -1,0 +1,43 @@
+version: '3.9' # Define a versão do formato do arquivo Docker Compose
+
+services:
+  sistemacorp: # Nome da Aplicação
+    build: # Configuração para construir a imagem do Docker
+      context: .
+    command: >
+        sh -c "echo 'Sistema Corporativo' && run.sh"
+    container_name: sistemacorp
+    restart: always
+    volumes: # Monta volumes incluindo arquivos estáticos e de mídia do Django.
+      - static-data:/vol/web/
+      - ./SistemaCorp/media:/vol/web/media/
+      - ./SistemaCorp:/SistemaCorp 
+    env_file:
+      - sistema.env # como usar o .env no docker-compose
+    depends_on:
+      - db
+
+  db: # Usa a imagem oficial do PostgreSQL versão 13 no Alpine Linux
+    image: postgres:13-alpine
+    restart: always
+    container_name: db
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    env_file:
+      - sistema.env
+
+  proxy:
+    build:
+      context: ./proxy
+    restart: always
+    container_name: proxy
+    depends_on:
+      - sistemacorp
+    ports:
+      - 80:8000
+    volumes:
+      - static-data:/vol/web
+
+volumes:
+  postgres-data:
+  static-data:

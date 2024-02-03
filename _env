@@ -1,14 +1,22 @@
-## Não precisa colocar "" aspas
 SECRET_KEY=django-insecure-uwx*g5p#-%qb50y9rx8s97=%&8t-8qq89zqi94ao4h+x6vm%md
-DEBUG=True
+
+ALLOWED_HOSTS=localhost,127.0.0.1
+
+CORS_ALLOWED_ORIGINS=https://seusite.com,http://seusite.com
+CORS_ORIGIN_ALLOW_ALL=1
+CORS_ALLOW_CREDENTIALS=0
+CSRF_TRUSTED_ORIGINS=''
+
+DEBUG=1
 SUPER_USER=ADMIN
 EMAIL=leticiateste@gmail.com
 
-NAME_DB=db.sqlite3
-USER_DB=root
-PASSWORD_DB=
-HOST_DB=localhost
-PORT_DB=3306
+POSTGRES_ENGINE=django.db.backends.postgresql
+POSTGRES_DB="nome-db"
+POSTGRES_USER="nome-usuario"
+POSTGRES_PASSWORD="senha"
+POSTGRES_HOST="nome-host"
+POSTGRES_PORT=5432
 
 EMAIL_HOST=smtp.office365.com
 EMAIL_HOST_USER=email@hotmail.com

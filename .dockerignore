@@ -1,0 +1,19 @@
+# Git
+.git
+.gitignore
+
+# Docker
+.docker
+
+# Python
+SistemaCorp/__pycache__/
+SistemaCorp/*/__pycache__/
+SistemaCorp/*/*/__pycache__/
+SistemaCorp/*/*/*/__pycache__/
+.env/
+.venv/
+venv/
+
+# Local PostgreSQL data
+data/
+/data
