@@ -1,6 +1,7 @@
 ***CORS HEADERS***
 
 **Dev: Letícia Lima**
+Se seu back-end e front-end estiverem em servidores diferentes, você um dia vai precisará disso. Segue configuração:
 
 Para configurar os Cors Headers precisamos instalar uma biblioteca.
 
