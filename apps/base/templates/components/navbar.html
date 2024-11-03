@@ -25,7 +25,11 @@
 				<button class="btn btn-secondary" type="submit"><i class="fas fa-search"></i></button>
 			</form>
 			{% if user.is_authenticated %}
-			<span class="p-2"><i class="fas fa-user mx-2"></i>{{user.first_name}} {{user.last_name}}</span>
+			<span class="p-2">
+                <a class="nav-link" href="{% url 'perfil' user.username %}">
+                    <i class="fas fa-user mx-2"></i>{{user.first_name}} {{user.last_name}}
+                </a>
+            </span>
 			<button class="btn btn-danger" data-bs-toggle="modal" href="#logoutModal">Logout</button>
 			{% else %}
 			<button class="btn btn-primary mx-2" onclick="location.href='{% url 'login' %}'">Entrar</button>
