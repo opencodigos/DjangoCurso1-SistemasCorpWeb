@@ -18,6 +18,7 @@ from django.contrib import admin
 from django.conf import settings
 from django.conf.urls.static import static
 from django.urls import path
+from base.views import base_view
 
 import logging
 from django.http import JsonResponse
@@ -38,6 +39,7 @@ def test_logging_view(request):
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('test-logging/', test_logging_view, name='test_logging'),
+    path('base/', base_view, name='base'),
 
 ]
 
