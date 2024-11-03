@@ -40,7 +40,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('test-logging/', test_logging_view, name='test_logging'),
     path('base/', base_view, name='base'),
-    
+    path('contas/', include('contas.urls')),
     path('', include('pages.urls')), # url do app 
 ]
 
