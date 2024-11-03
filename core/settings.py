@@ -64,6 +64,7 @@ if not DEBUG:
  
 # Application definition  
 DJANGO_APPS = [ # Aplicativos padrão do projeto django
+    'apps.contas',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -78,8 +79,7 @@ THIRD_APPS = [ # são as Lib/app que instalamos no projeto
 
 PROJECT_APPS = [ # são os apps que criamos no projeto 
     'apps.base', 
-    'apps.pages', 
-    'apps.contas', 
+    'apps.pages',  
 ]
 
 # INSTALLED_APPS é a variavel que django entende para fazer a leitura dos aplicativos então verifica a nomencratura.
@@ -237,6 +237,7 @@ MEDIA_URL = '/media/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 # Configuração de E-mail  
 EMAIL_HOST = os.getenv('EMAIL_HOST')
