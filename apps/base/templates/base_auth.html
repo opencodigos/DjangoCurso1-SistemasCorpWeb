@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block title %}Entrar/Criar{% endblock %}
+{% block content %} 
+<div class="container col-xl-10 col-xxl-8 px-4 py-5">
+    <div class="row g-lg-5 py-5">
+        <div class="col-lg-7"></div>
+        <div class="col-md-10 mx-auto col-lg-5 p-4 p-md-5 rounded-4 bg-light shadow-sm">
+            {% include 'components/message.html' %}
+            {% block content_auth %}{% endblock %}
+            <div class="text-muted py-4">
+                <small>Copyright© 2025 Sistema Corporativo</small>
+            </div>
+        </div>
+    </div>
+</div> 
+{% endblock %}
