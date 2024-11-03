@@ -17,8 +17,10 @@
 	
 </head>
 <body>
+	{% include 'components/navbar.html' %} 
+	{% include 'components/logout.html' %}
 	
-	{% include 'components/message.html' %} <!-- ## adiciona isso. -->
+	<!-- {% include 'components/message.html' %} -->
 
 	{% block content %}{% endblock %}
 

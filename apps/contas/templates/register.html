@@ -1,7 +1,7 @@
 {% extends 'base_auth.html' %}
 {% block title %}Criar Conta{% endblock %}
 {% block content_auth %}
-<form class="row" method="post" action="{% url 'register' %}">
+<form class="row" method="POST" action="{% url 'register' %}">
     {% csrf_token %}
     <h4>Criar uma conta</h4> 
 	{% for field in form %}
