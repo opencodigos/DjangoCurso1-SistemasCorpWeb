@@ -17,7 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.conf import settings
 from django.conf.urls.static import static
-from django.urls import path
+from django.urls import path, include
 from base.views import base_view
 
 import logging
@@ -40,7 +40,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('test-logging/', test_logging_view, name='test_logging'),
     path('base/', base_view, name='base'),
-
+    
+    path('', include('pages.urls')), # url do app 
 ]
 
 if settings.DEBUG:
