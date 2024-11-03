@@ -6,6 +6,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from contas.models import MyUser
 from contas.forms import CustomUserCreationForm, UserChangeForm
 from contas.permissions import grupo_colaborador_required
+from perfil.models import Perfil
 
 # Timeout (1hora)
 def timeout_view(request):
@@ -45,6 +46,9 @@ def register_view(request):
 
             group = Group.objects.get(name='usuario')
             usuario.groups.add(group)
+            
+            Perfil.objects.create(usuario=usuario) # Cria instancia perfil do usuário
+            
             messages.success(request, 'Registrado. Agora faça o login para começar!')
             
             return redirect('login') # Redireciona para login
