@@ -36,11 +36,12 @@ def detalhe_postagem_forum(request, id):
 # Edtar Postagem
 @login_required
 def editar_postagem_forum(request, id):
-    postagem = get_object_or_404(models.PostagemForum, id=id)
+    lista_grupos = ['administrador', 'colaborador']
+    postagem = get_object_or_404(models.PostagemForum, id=id) 
     
     # Verifica se o usuário autenticado é o autor da postagem
     if request.user != postagem.usuario and not (
-            ['administrador', 'colaborador'] in request.user.groups.all() or request.user.is_superuser):
+        any(grupo.name in lista_grupos for grupo in user.groups.all()) or request.user.is_superuser):
             return redirect('postagem-forum-list')  # Redireciona para uma página de erro ou outra página adequada
     
     if request.method == 'POST':
@@ -75,8 +76,9 @@ def lista_postagem_forum(request):
         template_view = 'lista-postagem-forum.html' # lista de post da rota /forum/
     else: # Essa parte mostra no Dashboard
         user = request.user 
+        lista_grupos = ['administrador', 'colaborador']
         template_view = 'dashboard/dash-lista-postagem-forum.html' # template novo que vamos criar 
-        if ['administrador', 'colaborador'] in user.groups.all() or user.is_superuser:
+        if any(grupo.name in lista_grupos for grupo in user.groups.all()) or user.is_superuser:
             # Usuário é administrador ou colaborador, pode ver todas as postagens
             postagens = models.PostagemForum.objects.filter(ativo=True)
         else:
