@@ -66,3 +66,21 @@ def deletar_postagem_forum(request, id):
         messages.error(request, 'Seu Post '+ postagem.titulo +' foi deletado com sucesso!')
         return redirect('lista-postagem-forum')
     return render(request, 'detalhe-postagem-forum.html', {'postagem': postagem})
+
+
+# Lista de Postagens no Dashboard (Gerenciar)
+def lista_postagem_forum(request):
+    if request.path == '/forum/': # Pagina forum da home, mostrar tudo ativo.
+        postagens = models.PostagemForum.objects.filter(ativo=True)
+        template_view = 'lista-postagem-forum.html' # lista de post da rota /forum/
+    else: # Essa parte mostra no Dashboard
+        user = request.user 
+        template_view = 'dashboard/dash-lista-postagem-forum.html' # template novo que vamos criar 
+        if ['administrador', 'colaborador'] in user.groups.all() or user.is_superuser:
+            # Usuário é administrador ou colaborador, pode ver todas as postagens
+            postagens = models.PostagemForum.objects.filter(ativo=True)
+        else:
+            # Usuário é do grupo usuário, pode ver apenas suas próprias postagens
+            postagens = models.PostagemForum.objects.filter(usuario=user)
+    context = {'postagens': postagens}
+    return render(request, template_view, context)
