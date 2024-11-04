@@ -7,7 +7,12 @@
         <p>Configurações do aplicativo contas</p>
         <ul>
             <li><a href="{% url 'password_change' %}">Alterar minha senha</a></li>
+            <li><a href="{% url 'atualizar_meu_usuario' %}">Atualizar meu usuário</a></li>
+            
+            {% if perms.contas.views_myuser %}
             <li><a href="{% url 'lista_usuarios' %}">Lista Todos usuários</a></li>
+            {% endif %} 
+            
         </ul>
     </div>
     <div class="p-5 bg-light" style="width: 430px;">

@@ -11,6 +11,7 @@ from contas.forms import CustomUserCreationForm, UserChangeForm
 from contas.permissions import grupo_colaborador_required
 from perfil.models import Perfil
 from perfil.forms import PerfilForm
+from base.utils import add_form_errors_to_messages
 
 # Timeout (1hora)
 def timeout_view(request):
@@ -44,7 +45,9 @@ def login_view(request):
                 return redirect('home')
             
         else:
-            messages.error(request, 'Email ou senha inválidos') # senão, retorna mensagem de erro
+            messages.error(request, 'Combinação de e-mail e senha inválida. \
+                            Se o erro persistir, entre em contato com o administrador do sistema.')
+            
     if request.user.is_authenticated: # se usuario acessar a rota /login, já estiver autenticado retorna para home
         return redirect('home')
     return render(request, 'login.html')
@@ -79,10 +82,10 @@ def register_view(request):
                 para administrador aprovar. Aguarde contato')
             
             return redirect('login') # Redireciona para login
-        else:
-            # Tratar quando usuario já existe, senhas... etc...
-            messages.error(request, 'A senha deve ter pelo menos 1 caractere maiúsculo, \
-                1 caractere especial e no minimo 8 caracteres.')
+        else: 
+            # Adicionar mensagens de erro aos campos dos formulários
+            add_form_errors_to_messages(request, form)
+            
     form = CustomUserCreationForm(user=request.user) # Inicialmente carrega o formulário no template, os campos etc..
     return render(request, "register.html",{"form": form})
 
@@ -96,6 +99,9 @@ def atualizar_meu_usuario(request):
             form.save()
             messages.success(request, 'Seu perfil foi atualizado com sucesso!')
             return redirect('home')
+        else: 
+            # Adicionar mensagens de erro aos campos dos formulários
+            add_form_errors_to_messages(request, form)
     else:
         form = UserChangeForm(instance=request.user, user=request.user)
     return render(request, 'user_update.html', {'form': form})
@@ -129,6 +135,9 @@ def atualizar_usuario(request, username):
             usuario.save()   
             messages.success(request, 'O perfil de usuário foi atualizado com sucesso!')
             return redirect('home')
+        else: 
+            # Adicionar mensagens de erro aos campos dos formulários
+            add_form_errors_to_messages(request, form)
     else:
         form = UserChangeForm(instance=user, user=request.user)
     return render(request, 'user_update.html', {'form': form})
@@ -169,20 +178,9 @@ def adicionar_usuario(request):
             messages.success(request, 'Usuário adicionado com sucesso.')
             return redirect('lista_usuarios')
         else:
-            for field, error_list in user_form.errors.items():
-                for error in error_list:
-                    messages.error(request, f"Error no campo '{user_form[field].label}': {error}")
-            
-            for field, error_list in perfil_form.errors.items():
-                for error in error_list:
-                    messages.error(request, f"Error no campo '{perfil_form[field].label}': {error}") 
-            
-            # Error
-            # error_list1 = user_form.errors.as_text()
-            # error_list2 = perfil_form.errors.as_text()
-            # # Voce pode fazer o que quiser com a lista de erros 
-            # messages.error(request, error_list1)
-            # messages.error(request, error_list2)
+            # Adicionar mensagens de erro aos campos dos formulários
+            add_form_errors_to_messages(request, user_form)
+            add_form_errors_to_messages(request, perfil_form)
             
     context = {'user_form': user_form, 'perfil_form': perfil_form}
     return render(request, "adicionar-usuario.html", context)

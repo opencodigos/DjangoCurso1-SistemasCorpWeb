@@ -1,3 +1,4 @@
+import re
 import random # escolha aleatoria
 import string # contem todas as letras do alfabeto, etc.
 from django.core.mail import send_mail
@@ -31,7 +32,18 @@ class CustomUserCreationForm(forms.ModelForm):
         if self.user.is_authenticated:
             del self.fields['password1']
             del self.fields['password2']
-       
+    
+    def clean_password1(self):
+        password1 = self.cleaned_data.get('password1')
+        if len(password1) < 8:
+            raise forms.ValidationError("A senha deve conter pelo menos 8 caracteres.")
+        
+        # Verifique se a senha contém pelo menos uma letra maiúscula, uma letra minúscula e um caractere especial
+        if not re.search(r'[A-Z]', password1) or not re.search(r'[a-z]', password1) or not re.search(r'[!@#$%^&*(),.?":{}|<>]', password1):
+            raise forms.ValidationError("A senha deve conter pelo menos 8 caracteres, uma letra maiúscula, uma letra minúscula e um caractere especial.")
+        
+        return password1
+   
     def clean_password2(self):
         # Check that the two password entries match
         password1 = self.cleaned_data.get("password1")
