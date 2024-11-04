@@ -45,3 +45,29 @@ class PostagemForumImagem(models.Model):
         super().clean()
         if self.postagem.postagem_imagens.count() >= 5: # Limitar somente 5 anexos
             raise ValidationError('Você só pode adicionar no máximo 5 anexos.')
+        
+
+class PostagemForumComentario(models.Model):
+    usuario = models.ForeignKey(user, on_delete=models.CASCADE, related_name='usuario_comentario')
+    postagem = models.ForeignKey(PostagemForum, on_delete=models.CASCADE, related_name="postagem_comentario") 
+    parent = models.ForeignKey('self', on_delete=models.CASCADE, blank=True, null=True, related_name='+') 
+    data_criacao = models.DateTimeField(auto_now_add=True)
+    comentario = models.TextField(blank=True, null=True)     
+   
+    @property
+    def children(self):
+        return PostagemForumComentario.objects.filter(parent=self).order_by('-data_criacao').all()
+
+    @property
+    def is_parent(self): 
+        if self.parent is None:
+            return True
+        return False 
+    
+    def __str__(self):
+        return '{} - {}'.format(self.usuario.email, self.postagem.titulo)
+
+    class Meta:
+        verbose_name = 'Comentário'
+        verbose_name_plural = 'Comentários'
+        ordering = ['-data_criacao']
