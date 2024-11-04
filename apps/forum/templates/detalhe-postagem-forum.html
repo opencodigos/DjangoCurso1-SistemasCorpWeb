@@ -6,12 +6,12 @@
         <div class="col-md-8"> 
             <div class="bg-light p-3">  
                 <div class="d-flex justify-content-between">
-                    <span>{{postagem.data_publicacao}}</span><br> 
+                    <span>{{postagem.data_publicacao}}</span> <br> 
                     <div class="div"> 
-						{% if postagem.usuario == request.user %}
-						<a class="btn btn-warning" href="{% url 'editar-postagem-forum' postagem.id %}"><i class="fas fa-edit"></i></a>  
-						<a class="btn btn-danger" href="#"><i class="fas fa-trash"></i></a>  
-						{% endif %}
+                        {% if postagem.usuario == request.user %}
+                        <a class="btn btn-warning" href="{% url 'editar-postagem-forum' postagem.id %}"><i class="fas fa-edit"></i></a>  
+                        <a class="btn btn-danger" data-bs-toggle="modal" href="#confirmarExclusaoModal{{postagem.id}}" role="button"><i class="fas fa-trash"></i></a>
+                        {% endif %}
                     </div> 
                 </div> 
                 <span>Autor: {{postagem.usuario.first_name}}</span>
@@ -26,4 +26,5 @@
         </div>
     </div>
 </div>
+{% include "modal-deletar-postagem-forum.html" %}
 {% endblock %}

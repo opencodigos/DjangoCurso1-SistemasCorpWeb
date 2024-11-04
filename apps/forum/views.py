@@ -55,3 +55,14 @@ def editar_postagem_forum(request, id):
     else:
         form = PostagemForumForm(instance=postagem)
     return render(request, 'form-postagem-forum.html', {'form': form})
+
+
+# Deletar Postagem
+@login_required 
+def deletar_postagem_forum(request, id): 
+    postagem = get_object_or_404(models.PostagemForum, id=id)
+    if request.method == 'POST':
+        postagem.delete()
+        messages.error(request, 'Seu Post '+ postagem.titulo +' foi deletado com sucesso!')
+        return redirect('lista-postagem-forum')
+    return render(request, 'detalhe-postagem-forum.html', {'postagem': postagem})

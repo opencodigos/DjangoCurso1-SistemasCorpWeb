@@ -1,0 +1,21 @@
+<div class="modal fade" id="confirmarExclusaoModal{{postagem.id}}" tabindex="-1" aria-labelledby="confirmarExclusaoModalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="confirmarExclusaoModalLabel">Atenção Usuario ! <i
+						class="link-danger fas fa-exclamation-triangle me-2"></i></h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				 <p>Você tem certeza de que deseja excluir a postagem "{{ postagem.titulo }}"?</p> 
+			</div>
+			<div class="modal-footer">
+	        <form method="post" action="{% url 'deletar-postagem-forum' postagem.id %}">
+	            {% csrf_token %}
+	            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+	            <button type="submit" class="btn btn-danger">Excluir</button>
+	        </form>
+	    </div>
+		</div>
+	</div>
+</div>
