@@ -1,7 +1,8 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from forum.forms import PostagemForumForm
 from django.contrib import messages  
 from forum import models
+
 
 # Lista de Postagens.
 def lista_postagem_forum(request):
@@ -23,3 +24,10 @@ def criar_postagem_forum(request):
             messages.success(request, 'Seu Post foi cadastrado com sucesso!')
             return redirect('lista-postagem-forum')
     return render(request, 'form-postagem-forum.html', {'form': form})
+
+
+# Detalhes da postagem
+def detalhe_postagem_forum(request, id):
+    postagem = get_object_or_404(models.PostagemForum, id=id)
+    return render(request, 'detalhe-postagem-forum.html', {'postagem': postagem})
+
