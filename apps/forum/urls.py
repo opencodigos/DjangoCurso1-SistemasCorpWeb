@@ -8,4 +8,6 @@ urlpatterns = [
     path('editar-postagem-forum/<int:id>/', views.editar_postagem_forum, name='editar-postagem-forum'),
     path('deletar-postagem-forum/<int:id>/', views.deletar_postagem_forum, name='deletar-postagem-forum'),
     path('dashboard/lista-postagem/', views.lista_postagem_forum, name='dash-lista-postagem-forum'), 
+    # AJAX
+    path('remover-imagem/', views.remover_imagem, name='remover-imagem'),
 ]

@@ -118,3 +118,14 @@ def lista_postagem_forum(request):
         
     context = {'postagens': postagens,'form_dict': form_dict}
     return render(request, template_view, context) 
+
+
+def remover_imagem(request):
+    imagem_id = request.GET.get('imagem_id') # Id da imagem
+    verifica_imagem = models.PostagemForumImagem.objects.filter(id=imagem_id) # Filtra pra ver se imagem existe...
+    if verifica_imagem:
+        postagem_imagem = models.PostagemForumImagem.objects.get(id=imagem_id) # pega a imagem
+        # Excluir a imagem do banco de dados e do sistema de arquivos (pasta postagem-forum/)
+        postagem_imagem.imagem.delete()
+        postagem_imagem.delete()
+    return JsonResponse({'message': 'Imagem removida com sucesso.'})
