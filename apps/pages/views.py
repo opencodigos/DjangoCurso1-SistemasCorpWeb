@@ -1,10 +1,12 @@
-from django.shortcuts import render
-from django.contrib import messages
-
-# Create your views here.
-def index(request):
-    # messages.success(request, "Operação realizada com sucesso!")
-    # messages.error(request, "Ocorreu um erro!")
-    # messages.warning(request, "Atenção com esta ação.")
-    # messages.info(request, "Essa é uma informação.")
-    return render(request, 'index.html')
+from django.shortcuts import render 
+ 
+def paginas_view(request):
+    url_name = request.resolver_match.url_name
+    pagina = {
+        'home': Blocos.objects.filter(pagina__nome='inicio',ativo=True).order_by('ordem'),
+        'sobre': Blocos.objects.filter(pagina__nome='sobre',ativo=True).order_by('ordem'),
+        'faq': Blocos.objects.filter(pagina__nome='faq',ativo=True).order_by('ordem'),
+        'contato': Blocos.objects.filter(pagina__nome='contato',ativo=True).order_by('ordem'),
+        }
+    context = {'blocos': pagina[str(url_name)]}
+    return render(request, 'index.html', context)
