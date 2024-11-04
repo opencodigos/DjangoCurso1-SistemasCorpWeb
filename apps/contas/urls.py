@@ -10,4 +10,5 @@ urlpatterns = [
    	path('atualizar-usuario/', views.atualizar_meu_usuario, name='atualizar_meu_usuario'),
     path('atualizar-usuario/<slug:username>/',  views.atualizar_usuario, name='atualizar_usuario'),
     path('lista-usuarios/', views.lista_usuarios, name='lista_usuarios'),
+    path('adicionar-usuario/',  views.adicionar_usuario, name='adicionar_usuario'),
 ]
