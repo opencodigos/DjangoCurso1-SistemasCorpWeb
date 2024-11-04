@@ -32,3 +32,30 @@
     </div>
 </section>
 {% endif %}
+
+{% if bloco.bloco.nome == 'BANNER_2' %}
+<section>
+    {% for banner_2 in bloco.conteudo.all %}
+    <div class="banner" style="background-image: url('{{banner_2.imagem.url}}');">
+        <div class="container">
+            <div class="row justify-content-center align-items-center">
+                <div class="col text-center">
+                    <span>{{banner_2.titulo_2|default:""}}</span>
+                    <h2 class="fw-bold">{{banner_2.titulo_1|default:""}}</h2>
+                    <p>{{banner_2.descricao_1|default:""}}</p>
+                    <p>{{banner_2.descricao_2|default:""}}</p>
+                    <p class="mb-0">
+                        {% if banner_2.titulo_botao_1 %}
+                        <a href="{% url ''|add:banner_2.rota_botao_1|add:'' %}" class="btn btn-primary py-3 px-4">{{banner_2.titulo_botao_1}}</a>
+                        {% endif %}
+                        {% if banner_2.titulo_botao_2 %}
+                        <a href="{% url ''|add:banner_2.rota_botao_2|add:'' %}" class="btn btn-primary py-3 px-4">{{banner_2.titulo_botao_2}}</a>
+                        {% endif %}
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div> 
+    {% endfor %}
+</section>
+{% endif %}
