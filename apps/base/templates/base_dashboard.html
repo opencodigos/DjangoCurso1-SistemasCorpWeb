@@ -25,7 +25,7 @@
     <nav class="navbar navbar-expand-lg bg-secondary fixed-top" style="height: 70px">
         <div class="container-fluid"> 
             <a class="navbar-brand mx-5" href="/">
-                <img src="{% static 'images/d-logo.png' %}" width="130" alt="" loading="lazy"/>
+                <img src="{{ logo.image.url }}" width="150" alt="{{ logo.title }}" title="{{ logo.title }}" class="logo">
             </a>
             <a class="navbar-toggler border-0" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
                 <i class="link-light fas fa-align-left fa-2x me-3"></i> 
