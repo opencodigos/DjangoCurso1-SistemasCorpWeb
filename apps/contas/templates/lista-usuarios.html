@@ -1,0 +1,61 @@
+{% extends 'base_dashboard.html' %}
+{% block title %}Lista Usuários{% endblock %}
+{% load static %}
+{% block content_dash %}
+<div class="p-3">
+
+	<div class="d-flex justify-content-between mb-3">
+		<button class="btn btn-secondary" onclick="window.location.href='#'">
+			<i class="fas fa-user mx-2"></i> Adicionar Novo</button>
+		<h2>Todas usuários cadastrados no sistema</h2>
+	</div>
+
+	<!-- table -->
+	<div class="table-responsive">
+		<table class="table table-light">
+			<thead class="table-light">
+				<tr>
+					<th scope="col">#</th>
+                    <th scope="col">Foto</th>
+					<th scope="col">Nome/Sobrenome</th>
+					<th scope="col">E-mail</th>
+					<th scope="col">Data Criação</th>
+					<th scope="col">Ativo</th>
+					<th scope="col">Acão</th>
+				</tr>
+			</thead>
+			{% for usuario in lista_usuarios %}
+			<tbody>
+				<tr>
+                    <td scope="row">{{ usuario.id }}</td>
+                    <td scope="row">
+                        {% if usuario.perfil.foto %}
+                        <img src="{{usuario.perfil.foto.url}}" class="img-thumbnail border rounded" width="30" alt="">  
+                        {% else %}
+                        <img src="{% static 'images/perfil/foto-padrao.jpg' %}" class="img-thumbnail border rounded" width="30" alt="">
+                        {% endif %}
+                    </td>
+					<td scope="row">{{ usuario.first_name }} {{ usuario.last_name }}</td>
+					<td scope="row">{{ usuario.email }}</td>
+					<td scope="row">{{ usuario.date_joined|date:'d/m/Y'}}</td>
+					<td scope="row">
+						{% if usuario.is_active %}
+						<span class="badge bg-success rounded-pill d-inline">Ativado</span> 
+						{% else %}
+						<span class="badge bg-danger rounded-pill d-inline">Desativado</span>  
+						{% endif %}
+					</td>
+					<td scope="row">
+						<a class="link-warning" href=""><i class="fas fa-eye mx-2"></i></a>
+						<a class="ml-2 link-secondary" href="{% url 'atualizar_usuario' usuario.username %}"><i class="far fa-file mx-2"></i></a>
+						<a class="ml-3 link-danger" href=""><i class="fas fa-trash mx-2"></i></a>
+					</td>
+				</tr>
+			</tbody>
+			{% empty %}
+			<p>Nenhuma usuário cadastrado.</p>
+			{% endfor %}
+		</table>
+	</div>
+</div>
+{% endblock %}
