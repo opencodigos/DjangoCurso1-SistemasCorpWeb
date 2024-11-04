@@ -1,5 +1,6 @@
 from django.shortcuts import render 
- 
+from pages.models import Blocos
+
 def paginas_view(request):
     url_name = request.resolver_match.url_name
     pagina = {
