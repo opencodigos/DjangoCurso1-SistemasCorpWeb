@@ -95,3 +95,52 @@
     </div>
 </section>
 {% endif %}
+
+{% if bloco.bloco.nome == 'BANNER_4' %}
+<section>
+    {% for banner_4 in bloco.conteudo.all %}
+    <div class="banner" style="background-image: url('{{banner_4.imagem.url}}');">
+        <div class="container py-lg-5">
+            <div class="row d-flex align-items-center">
+                <div class="col-md-5">
+                    <span>{{banner_4.titulo_2|default:""}}</span>
+                    <h2 class="mb-4 fs-1">{{banner_4.titulo_1|default:""}}</h2>
+                    <p class="mb-0 fs-2">
+                        {% if banner_4.titulo_botao_1 %}
+                        <a href="{% url ''|add:banner_4.rota_botao_1|add:'' %}" class="btn btn-primary py-3 px-4">{{banner_4.titulo_botao_1}}</a>
+                        {% endif %}
+                        {% if banner_4.titulo_botao_2 %}
+                        <a href="{% url ''|add:banner_4.rota_botao_2|add:'' %}" class="btn btn-primary py-3 px-4">{{banner_4.titulo_botao_2}}</a>
+                        {% endif %}
+                    </p>
+                </div>
+                <div class="col-md-7">
+                    <div class="row pt-4">
+                        <div class="col-md-6 d-flex justify-content-center">
+                            <div class="fs-2 text-bg-primary"> 
+                                <span>{{banner_4.descricao_1|default:""}}</span>
+                            </div>
+                        </div>
+                        <div class="col-md-6 d-flex justify-content-center">
+                            <div class="fs-2 text-bg-secondary">
+                                <span>{{banner_4.descricao_2|default:""}}</span>
+                            </div>
+                        </div>
+                        <div class="col-md-6 d-flex justify-content-center">
+                            <div class="fs-2 text-bg-primary">
+                                <span>{{banner_4.descricao_3|default:""}}</span>
+                            </div>
+                        </div>
+                        <div class="col-md-6 d-flex justify-content-center">
+                            <div class="fs-2 text-bg-secondary">
+                                <span>{{banner_4.descricao_4|default:""}}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</section>
+{% endif %}
