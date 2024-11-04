@@ -1,0 +1,46 @@
+@import url('global.css');
+
+.sidebar {
+    position: fixed;
+    height: 100%;
+    padding: 10px 15px 0;
+    z-index: 0;
+}
+
+.sidebar button {
+    height: 60px;
+}
+
+.bloco {
+    margin: 70px 0px 70px 0px;
+}
+
+.pagination .page-link {
+    background: rgb(138, 138, 138);
+    color: white;
+    border: none;
+}
+
+@media (min-width: 968px) {
+    .bloco {
+        padding-left: 250px;
+    }
+
+    /* .collapse:not(.show) {
+        display: flex;
+    } */
+}
+
+@media (max-width: 968px) {
+    .sidebar {
+        width: 100%;
+    }
+
+    .navbar-brand {
+        display: none;
+    }
+
+    footer {
+        display: none;
+    }
+}
