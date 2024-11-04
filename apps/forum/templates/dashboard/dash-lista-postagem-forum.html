@@ -51,7 +51,7 @@
                         {% endif %}
                     </td>
                     <td scope="row">
-                        <a class="link-warning" href="{% url 'detalhe-postagem-forum' postagem.id %}"><i class="fas fa-eye mx-2"></i></a>
+                        <a class="link-warning" href="{% url 'detalhe-postagem-forum' postagem.slug %}"><i class="fas fa-eye mx-2"></i></a>
                         <a class="ml-2 link-secondary" data-bs-toggle="modal" href="#editarPostagemModal{{postagem.id}}" role="button"><i class="far fa-file mx-2"></i></a>
                         <a class="ml-3 link-danger" data-bs-toggle="modal" href="#confirmarExclusaoModal{{postagem.id}}" role="button"><i class="fas fa-trash mx-2"></i></a>
                         {% include "modal-form-postagem-forum.html" %}   

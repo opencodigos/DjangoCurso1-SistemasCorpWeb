@@ -9,7 +9,7 @@
 	        <div class="p-3 mb-3 rounded-3 shadow-sm">
 	            <div class="align-items-center">
 	                <div class="d-flex justify-content-between">
-	                    <h5><a href="{% url 'detalhe-postagem-forum' postagem.id %}">{{postagem.titulo}}</a></h5>
+	                    <h5><a href="{% url 'detalhe-postagem-forum' postagem.slug %}">{{postagem.titulo}}</a></h5>
 	                    <small>{{postagem.usuario.first_name}} {{postagem.usuario.last_name}}</small> 
 	                </div>  
 	                <div class="text-truncate-box"> 
