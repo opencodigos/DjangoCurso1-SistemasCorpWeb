@@ -9,8 +9,8 @@
                     {% if child_comentario.usuario.perfil.foto %} 
                     <img src="{{child_comentario.usuario.perfil.foto.url}}" class="rounded-circle mr-2" width="30" height="30"> 
                     {% else %}
-                    <img src="{% static 'images/perfil/foto-padrao.jpg' %}" class="rounded-circle mr-2" width="30" height="30">
-                    {% endif %}
+					<img src="{% static 'images/perfil/foto-padrao.jpg' %}" class="rounded-circle mr-2" width="30" height="30">
+					{% endif %}
                     <strong class="fst-italic">{{child_comentario.usuario.first_name}} {{child_comentario.usuario.last_name}}</strong>
                 </div>  
                 <span class="mx-3 fst-italic">{{child_comentario.data_criacao}}</span> 
@@ -20,14 +20,21 @@
                 {% if request.user == child_comentario.usuario %}
                 <a href="#" class="link-success" data-bs-toggle="collapse" data-bs-target="#editarSubComentario{{child_comentario.id}}" 
                     aria-expanded="false" aria-controls="collapseEditarSubComentario"><i class="fas fa-edit mx-2"></i></a>
-                <a href="#" class="link-danger"><i class="fas fa-trash fa-1x mx-1"></i></a> 
+ 
+                <form id="form-resp-remocao" method="POST" action="{% url 'deletar-comentario' child_comentario.id %}">
+					{% csrf_token %}
+					<button type="submit" class="link-danger btn btn-transparent m-0 p-0">
+						<i class="fas fa-trash fa-1x mx-1"></i>
+					</button>
+				</form> 
+
                 {% endif %}
             </div>  
         </div>  
-    </div> 
+    </div>  
 
-     <!-- Editar subComentario  -->
-     <div class="collapse mt-2" id="editarSubComentario{{child_comentario.id}}"> 
+    <!-- Editar subComentario  -->
+    <div class="collapse mt-2" id="editarSubComentario{{child_comentario.id}}"> 
         <form method="POST" action="{% url 'editar-comentario' child_comentario.id %}"> 
             {% csrf_token %}
             <textarea class="form-control" rows="3" name="comentario" id="comentario" 
@@ -46,4 +53,4 @@
     </div>
 
     {% endfor %} 
-</div>
+</div> 
