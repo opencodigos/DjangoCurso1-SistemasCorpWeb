@@ -6,7 +6,7 @@ from django.core.paginator import Paginator
 from forum.forms import PostagemForumForm
 from django.contrib import messages  
 from forum import models
-from base.filtros import filtrar_modelo
+from base.utils import filtrar_modelo
 
 # Lista de Postagens.
 def lista_postagem_forum(request):
@@ -102,9 +102,10 @@ def lista_postagem_forum(request):
     form_dict = {}
     filtros = {}
     
-    titulo_busca = request.GET.get("titulo")
+    titulo_busca = request.GET.get("titulo") 
     if titulo_busca:
         filtros["titulo"] = titulo_busca
+        filtros["descricao"] = titulo_busca
         
     if request.path == '/forum/':
         postagens = models.PostagemForum.objects.filter(ativo=True)
