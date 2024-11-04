@@ -43,6 +43,7 @@ urlpatterns = [
     path('config/', include('config.urls')),
     path('contas/', include('contas.urls')),
     path('perfil/', include('perfil.urls')),
+    path('forum/', include('forum.urls')),
     path('', include('pages.urls')), # url do app 
 ]
 
