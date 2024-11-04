@@ -1,0 +1,27 @@
+{% if bloco.bloco.nome == 'FAQ' %}
+<section>
+    <div class="container py-lg-5">
+        <div class="row justify-content-center mb-5 pb-3">
+            <div class="col-md-7 text-center">
+                <h2 class="mb-4">{{bloco.titulo}}</h2>
+            </div>
+        </div>
+        <div class="accordion accordion-flush" id="accordionFlushExample">
+            {% for faq in bloco.conteudo.all %}
+            <div class="accordion-item">
+                <div class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#faq-{{faq.id}}" aria-expanded="false" aria-controls="faq-{{faq.id}}">
+                        {{faq.titulo_1}}
+                    </button>
+                </div>
+                <div id="faq-{{faq.id}}" class="accordion-collapse collapse"
+                    data-bs-parent="#accordionFlushExample">
+                    <div class="accordion-body">{{faq.descricao_1}}</div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
