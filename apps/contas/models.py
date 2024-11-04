@@ -24,6 +24,7 @@ class MyUser(AbstractBaseUser, PermissionsMixin):
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     date_joined = models.DateTimeField('date joined', auto_now_add=True) 
+    force_change_password = models.BooleanField(default=False)
     
     USERNAME_FIELD = 'email'
     EMAIL_FIELD = 'email'
@@ -39,7 +40,10 @@ class MyUser(AbstractBaseUser, PermissionsMixin):
 
     def get_short_name(self):
         return self.first_name 
-        
+    
+    def requires_password_change(self):
+        return self.force_change_password
+    
     def save(self, *args, **kwargs):
         get_email = self.email.split("@")[0]
         email = re.sub(r"[^a-zA-Z0-9]","",get_email)

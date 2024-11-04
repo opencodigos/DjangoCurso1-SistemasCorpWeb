@@ -26,9 +26,20 @@ def login_view(request):
         email = request.POST.get('email') # Valor do campo email
         password = request.POST.get('password') # Valor do campo password 
         user = authenticate(request, email=email, password=password) # Retorna a autenticação
-        if user is not None: # se user não for none ou underfine 
-            login(request, user) # faz login no sistema
-            return redirect('home') # Volta para rota home 
+        if user is not None:
+            login(request, user)
+            
+            if user.is_authenticated and user.requires_password_change(): # Verifica
+                msg = 'Olá '+user.first_name+', como você pode perceber atualmente \
+                        a sua senha é 123 cadastrado. Recomendamos fortemente \
+                        que você altere sua senha para garantir a segurança da sua conta. \
+                        É importante escolher uma senha forte e única que não seja fácil de adivinhar. \
+                        Obrigado pela sua atenção!' 
+                messages.warning(request, msg)
+                return redirect('force_password_change') # Vai para rota de alterar senha.
+            else:
+                return redirect('home')
+            
         else:
             messages.error(request, 'Email ou senha inválidos') # senão, retorna mensagem de erro
     if request.user.is_authenticated: # se usuario acessar a rota /login, já estiver autenticado retorna para home
@@ -39,7 +50,7 @@ def login_view(request):
 # Registrar um usuário
 def register_view(request):
     if request.method == "POST": # metodo POST
-        form = CustomUserCreationForm(request.POST) # Formulário que criamos no forms.py
+        form = CustomUserCreationForm(request.POST, user=request.user) # Formulário que criamos no forms.py
         if form.is_valid(): # se formulário for valido registra usuário
             usuario = form.save(commit=False)
             usuario.is_valid = False
@@ -57,7 +68,7 @@ def register_view(request):
             # Tratar quando usuario já existe, senhas... etc...
             messages.error(request, 'A senha deve ter pelo menos 1 caractere maiúsculo, \
                 1 caractere especial e no minimo 8 caracteres.')
-    form = CustomUserCreationForm() # Inicialmente carrega o formulário no template, os campos etc..
+    form = CustomUserCreationForm(user=request.user) # Inicialmente carrega o formulário no template, os campos etc..
     return render(request, "register.html",{"form": form})
 
 
@@ -104,8 +115,8 @@ def lista_usuarios(request): # Lista Cliente
 @login_required
 @grupo_colaborador_required(['administrador','colaborador'])
 def adicionar_usuario(request):
-    user_form = CustomUserCreationForm()
-    perfil_form = PerfilForm()
+    user_form = CustomUserCreationForm(user=request.user)
+    perfil_form = PerfilForm(user=request.user)
 
     if request.method == 'POST':
         user_form = CustomUserCreationForm(request.POST)
