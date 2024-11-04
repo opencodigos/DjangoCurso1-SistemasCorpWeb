@@ -37,8 +37,14 @@
                     {% endfor %}
                 </div> 
             </div> 
-            {% include "comentarios/adicionar-comentario.html" %}
+            {% for comentario  in postagem.postagem_comentario.all %}
+            {% if comentario.is_parent %}
             {% include "comentarios/lista-comentario.html" %}
+            {% include "comentarios/editar-comentario.html" %}
+            {% include "comentarios/responder-comentario.html" %}
+            {% include "comentarios/lista-responder-comentario.html" %}
+            {% endif %}
+            {% endfor %}
         </div>
     </div>
 </div> 
