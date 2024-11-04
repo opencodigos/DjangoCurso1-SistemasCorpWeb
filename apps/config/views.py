@@ -8,4 +8,9 @@ def painel_view(request):
 
 @login_required
 def configuracao_view(request):
-    return render(request, 'configuracao.html') 
+    return render(request, 'configuracao.html')
+
+
+@login_required
+def relatorio_view(request):
+    return render(request, 'relatorio.html')
