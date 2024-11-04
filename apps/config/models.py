@@ -33,3 +33,19 @@ class SEOHome(models.Model):
         model = self.__class__
         if model.objects.exists() and self.pk != model.objects.first().pk:
             raise ValidationError('Já existe meta tags cadastradas para a Home.')
+        
+        
+class GoogleAnalytics(models.Model):
+    ga_id = models.CharField('Código GA', max_length=75)
+
+    class Meta:
+        verbose_name = 'Google Analytics'
+        verbose_name_plural = 'Google Analytics'
+
+    def __str__(self) -> str:
+        return 'Código Google Analytics'
+
+    def clean(self) -> None:
+        model = self.__class__
+        if model.objects.exists() and self.pk != model.objects.first().pk: 
+            raise ValidationError('Já existe um Código GA cadastrado.')

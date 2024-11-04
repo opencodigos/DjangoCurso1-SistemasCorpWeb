@@ -11,3 +11,5 @@ def context_logo(request):
 def context_seo(request):
     return {'seo': SEOHome.objects.all().first()}
 
+def context_ga_code(request):
+    return {'ga_code': GoogleAnalytics.objects.all().first()}
