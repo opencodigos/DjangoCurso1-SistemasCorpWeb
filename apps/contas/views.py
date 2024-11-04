@@ -120,8 +120,8 @@ def adicionar_usuario(request):
     perfil_form = PerfilForm(user=request.user)
 
     if request.method == 'POST':
-        user_form = CustomUserCreationForm(request.POST)
-        perfil_form = PerfilForm(request.POST, request.FILES)
+        user_form = CustomUserCreationForm(request.POST, user=request.user)
+        perfil_form = PerfilForm(request.POST, request.FILES, user=request.user)
 
         if user_form.is_valid() and perfil_form.is_valid():
             # Salve o usuário

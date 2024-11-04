@@ -1,9 +1,8 @@
-from django import forms
-from django.contrib.auth.forms import UserCreationForm
+from django import forms 
 from django.core.exceptions import ValidationError
 from contas.models import MyUser 
 
-class CustomUserCreationForm(UserCreationForm):
+class CustomUserCreationForm(forms.ModelForm):
     password1 = forms.CharField(label="Senha", widget=forms.PasswordInput) 
     password2 = forms.CharField(label="Confirmar Senha", widget=forms.PasswordInput)
 
