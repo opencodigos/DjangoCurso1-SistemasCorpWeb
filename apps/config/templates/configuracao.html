@@ -1,0 +1,23 @@
+{% extends 'base_dashboard.html' %}
+{% block title %}Configurações{% endblock %}
+{% block content_dash %}
+<div class="d-flex flex-wrap gap-3">
+    <div class="p-5 bg-light" style="width: 430px;">
+        <h4>Contas</h4>
+        <p>Configurações do aplicativo contas</p>
+        <ul>
+            <li><a href="{% url 'password_change' %}">Alterar minha senha</a></li>
+        </ul>
+    </div>
+    <div class="p-5 bg-light" style="width: 430px;">
+        <h4>Sistema</h4>
+        <p>Configurações de logo,Banner,informações empresa.</p>
+        <ul>
+            <li><a href="#">Alterar Informações da empresa</a></li>
+            <li><a href="#">Alterar Banner Inicial</a></li>
+            <li><a href="#">Tags/Metas/Robot</a></li>
+            <li><a href="#">Alterar Logo</a></li>
+        </ul>
+    </div>
+</div>
+{% endblock %}
