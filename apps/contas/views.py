@@ -4,6 +4,7 @@ from django.contrib.auth import authenticate, login, logout, update_session_auth
 from django.contrib.auth.decorators import login_required 
 from django.contrib.auth.models import Group 
 from django.contrib.auth.forms import PasswordChangeForm 
+from django.core.paginator import Paginator
 from django.core.mail import send_mail
 from django.shortcuts import render, redirect, get_object_or_404
 from contas.models import MyUser
@@ -147,9 +148,13 @@ def atualizar_usuario(request, username):
 # Somente admin e colab pode ser essa lista
 @login_required
 @grupo_colaborador_required(['administrador','colaborador'])
-def lista_usuarios(request): # Lista Cliente 
-    lista_usuarios = MyUser.objects.select_related('perfil').filter(is_superuser=False) 
-    return render(request, 'lista-usuarios.html', {'lista_usuarios': lista_usuarios})
+def lista_usuarios(request):
+    lista_usuarios = MyUser.objects.select_related('perfil').filter(is_superuser=False)
+    paginacao = Paginator(lista_usuarios, 3)
+    pagina_numero = request.GET.get("page")
+    page_obj = paginacao.get_page(pagina_numero)
+    context = {'page_obj': page_obj}
+    return render(request, 'lista-usuarios.html', context)
 
 
 # Adicionar usuário no sistema, somente admin e colab podem cadastrar.
