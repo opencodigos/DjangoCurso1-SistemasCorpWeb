@@ -127,6 +127,9 @@ def adicionar_usuario(request):
             # Salve o usuário
             usuario = user_form.save()
 
+            group = Group.objects.get(name='usuario')
+            usuario.groups.add(group)
+            
             # Crie um novo perfil para o usuário
             perfil = perfil_form.save(commit=False)
             perfil.usuario = usuario
@@ -134,7 +137,22 @@ def adicionar_usuario(request):
  
             messages.success(request, 'Usuário adicionado com sucesso.')
             return redirect('lista_usuarios')
-
+        else:
+            for field, error_list in user_form.errors.items():
+                for error in error_list:
+                    messages.error(request, f"Error no campo '{user_form[field].label}': {error}")
+            
+            for field, error_list in perfil_form.errors.items():
+                for error in error_list:
+                    messages.error(request, f"Error no campo '{perfil_form[field].label}': {error}") 
+            
+            # Error
+            # error_list1 = user_form.errors.as_text()
+            # error_list2 = perfil_form.errors.as_text()
+            # # Voce pode fazer o que quiser com a lista de erros 
+            # messages.error(request, error_list1)
+            # messages.error(request, error_list2)
+            
     context = {'user_form': user_form, 'perfil_form': perfil_form}
     return render(request, "adicionar-usuario.html", context)
  
