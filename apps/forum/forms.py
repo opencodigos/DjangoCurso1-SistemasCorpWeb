@@ -2,12 +2,32 @@ from django import forms
 from django.conf import settings
 from .models import PostagemForum
 
+
+class MultipleFileInput(forms.ClearableFileInput):
+    allow_multiple_selected = True
+
+
+class MultipleFileField(forms.FileField):
+    def __init__(self, *args, **kwargs):
+        kwargs.setdefault("widget", MultipleFileInput())
+        super().__init__(*args, **kwargs)
+
+    def clean(self, data, initial=None):
+        single_file_clean = super().clean
+        if isinstance(data, (list, tuple)):
+            result = [single_file_clean(d, initial) for d in data]
+        else:
+            result = [single_file_clean(data, initial)]
+        return result
+                      
+                      
 class PostagemForumForm(forms.ModelForm):
     data_publicacao = forms.DateField(widget=forms.DateInput(format='%Y-%m-%d',attrs={'type': 'date'})) 
+    postagem_imagens = MultipleFileField(label='Selecione no máximo 5 imagens.',required=False)
 
     class Meta:
         model = PostagemForum
-        fields = ['titulo', 'descricao', 'data_publicacao', 'ativo', 'anexar_imagem']
+        fields = ['titulo', 'descricao', 'data_publicacao', 'ativo']
 
     def __init__(self, *args, **kwargs):
         self.user = kwargs.pop('user', None)

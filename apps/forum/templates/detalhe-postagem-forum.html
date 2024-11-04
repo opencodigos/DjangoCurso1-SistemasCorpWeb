@@ -19,25 +19,22 @@
                 <div class="mt-3">  
                     <h2>{{postagem.titulo}}</h2>
                     <p>{{postagem.descricao}}</p>
-                    {% if postagem.anexar_imagem %}  
-                    <a data-bs-toggle="modal" href="#exampleModal" role="button">
-                        <i class="link-info fas fa-image fa-2x me-2"></i></a>
-                    <div class="modal fade" id="exampleModal" tabindex="-1" 
-                        aria-labelledby="exampleModalLabel" aria-hidden="true">
-                        <div class="modal-dialog modal-dialog-centered modal-lg">
+                    {% for imagem in postagem.postagem_imagens.all %}
+                    <a data-bs-toggle="modal" href="#imagemModal{{imagem.id}}" role="button"><i class="link-info fas fa-image fa-2x me-2"></i></a>
+                    <div class="modal fade" id="imagemModal{{imagem.id}}" tabindex="-1" aria-labelledby="imagemModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                <h2 class="modal-title fs-5" id="exampleModalLabel">
-                                    <i class="link-info fas fa-image fa-2x me-2"></i></h2>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    <h5 class="modal-title" id="imagemModalLabel"><i class="link-info fas fa-image fa-2x me-2"></i></h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
-                                <div class="modal-body">
-                                    <img src="{{ postagem.anexar_imagem.url }}" alt="Imagem da postagem" class="img-fluid">
+                                <div class="modal-body"> 
+                                    <img src="{{ imagem.imagem.url }}" alt="Imagem da postagem" class="img-fluid">
                                 </div> 
                             </div>
                         </div>
-                    </div>
-                    {% endif %}
+                    </div>  
+                    {% endfor %}
                 </div> 
             </div> 
         </div>

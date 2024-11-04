@@ -15,17 +15,23 @@ def lista_postagem_forum(request):
 
 
 # Cria postagens 
-def criar_postagem_forum(request): 
+def criar_postagem_forum(request):
     form = PostagemForumForm()
     if request.method == 'POST':
         form = PostagemForumForm(request.POST, request.FILES)
         if form.is_valid():
-            forum = form.save(commit=False)
-            forum.usuario = request.user
-            forum.save()
-            # Redirecionar para uma página de sucesso ou fazer qualquer outra ação desejada
-            messages.success(request, 'Seu Post foi cadastrado com sucesso!')
-            return redirect('lista-postagem-forum')
+            postagem_imagens = request.FILES.getlist('postagem_imagens') # pega as imagens
+            if len(postagem_imagens) > 5: # faz um count
+                messages.error(request, 'Você só pode adicionar no máximo 5 imagens.')
+            else:
+                forum = form.save(commit=False)
+                forum.usuario = request.user
+                forum.save()
+                for f in postagem_imagens:
+                    models.PostagemForumImagem.objects.create(postagem=forum, imagem=f)
+                # Redirecionar para uma página de sucesso ou fazer qualquer outra ação desejada
+                messages.success(request, 'Seu Post foi cadastrado com sucesso!')
+                return redirect('lista-postagem-forum')
     return render(request, 'form-postagem-forum.html', {'form': form})
 
 
