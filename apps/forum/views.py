@@ -1,3 +1,4 @@
+import re
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
@@ -39,8 +40,10 @@ def detalhe_postagem_forum(request, id):
 # Edtar Postagem
 @login_required
 def editar_postagem_forum(request, id):
+    redirect_route = request.POST.get('redirect_route', '') 
     postagem = get_object_or_404(models.PostagemForum, id=id)
-    
+    message = 'Seu Post '+ postagem.titulo +' foi atualizado com sucesso!' # atualizei a mensagem
+
     # Verifica se o usuário autenticado é o autor da postagem
     if request.user != postagem.usuario and not (
             ['administrador', 'colaborador'] in request.user.groups.all() or request.user.is_superuser):
@@ -50,9 +53,8 @@ def editar_postagem_forum(request, id):
         form = PostagemForumForm(request.POST, instance=postagem)
         if form.is_valid():
             form.save()
-            messages.warning(request, 'Seu Post '+ postagem.titulo +' \
-                foi atualizado com sucesso!')
-            return redirect('editar-postagem-forum', id=postagem.id)
+            messages.warning(request, message)
+            return redirect(redirect_route) # Faz o redirect de acordo com a rota que estou.
         else:
             add_form_errors_to_messages(request, form) 
     return JsonResponse({'status': 'Ok'}) # Coloca por enquanto.
@@ -61,12 +63,19 @@ def editar_postagem_forum(request, id):
 # Deletar Postagem
 @login_required 
 def deletar_postagem_forum(request, id): 
+    redirect_route = request.POST.get('redirect_route', '') # adiciono saber a rota que estamos
+    print(redirect_route)
     postagem = get_object_or_404(models.PostagemForum, id=id)
+    message = 'Seu Post '+postagem.titulo+' foi deletado com sucesso!' # atualizei a mesnagem aqui 
     if request.method == 'POST':
         postagem.delete()
-        messages.error(request, 'Seu Post '+ postagem.titulo +' foi deletado com sucesso!')
-        return redirect('lista-postagem-forum')
-    return render(request, 'detalhe-postagem-forum.html', {'postagem': postagem})
+        messages.error(request, message)
+        
+        if re.search(r'/forum/detalhe-postagem-forum/([^/]+)/', redirect_route): # se minha rota conter
+            return redirect('lista-postagem-forum')
+        return redirect(redirect_route)
+
+    return JsonResponse({'status':message}) 
 
 
 # Lista de Postagens no Dashboard (Gerenciar)
