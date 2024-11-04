@@ -31,9 +31,13 @@
 <div class="container">
     <div class="row g-2 mt-5">
         <div class="col-md-4 bg-light">
-            <form class="d-flex" role="search" method="GET">
-                <input class="form-control me-2" type="search" name="title_post" placeholder="Pesquisar..." aria-label="Search">
-                <button class="btn btn-outline-dark" type="submit">Pesquisar</button>
+            <form class="hstack gap-1" method="GET" action="?">
+                <input type="text" name="titulo" class="form-control" placeholder="Buscar por título" value="{{ request.GET.titulo }}">
+                <!-- Outros campos de filtro aqui, se necessário -->
+                <button class="btn btn-outline-secondary" type="submit"><i class="fas fa-search"></i></button>
+                {% if request.GET.titulo %}
+                <a href="{% url 'perfil' obj.username %}" class="link-secondary">Resetar</a>
+                {% endif %}
             </form>
         </div>
         <div class="col-md-8">
