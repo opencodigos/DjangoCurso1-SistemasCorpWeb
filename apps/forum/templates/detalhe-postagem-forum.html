@@ -37,10 +37,11 @@
                     {% endfor %}
                 </div> 
             </div> 
+            {% include "comentarios/adicionar-comentario.html" %}
+            {% include "comentarios/lista-comentario.html" %}
         </div>
     </div>
-</div>
-{% include "comentarios/adicionar-comentario.html" %}
+</div> 
 {% include "modal-form-postagem-forum.html" %}  
 {% include "modal-deletar-postagem-forum.html" %}
 {% endblock %}
