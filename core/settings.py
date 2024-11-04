@@ -79,6 +79,7 @@ THIRD_APPS = [ # são as Lib/app que instalamos no projeto
 
 PROJECT_APPS = [ # são os apps que criamos no projeto 
     'apps.base', 
+    'apps.config',
     'apps.pages',
     'apps.perfil',
 ]

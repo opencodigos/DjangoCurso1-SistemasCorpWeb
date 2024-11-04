@@ -25,6 +25,8 @@
 				<button class="btn btn-secondary" type="submit"><i class="fas fa-search"></i></button>
 			</form>
 			{% if user.is_authenticated %}
+            <button class="btn btn-warning mx-2" type="submit"  onclick="location.href='{% url 'painel' %}'">
+                <i class="fas fa-cog"></i></button>
 			<span class="p-2">
                 <a class="nav-link" href="{% url 'perfil' user.username %}">
                     <i class="fas fa-user mx-2"></i>{{user.first_name}} {{user.last_name}}
