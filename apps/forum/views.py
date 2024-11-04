@@ -43,27 +43,39 @@ def detalhe_postagem_forum(request, id):
     return render(request,'detalhe-postagem-forum.html', context)
 
 
-# Edtar Postagem
+# Editar Postagem (ID)
 @login_required
 def editar_postagem_forum(request, id):
     redirect_route = request.POST.get('redirect_route', '') 
     postagem = get_object_or_404(models.PostagemForum, id=id)
-    message = 'Seu Post '+ postagem.titulo +' foi atualizado com sucesso!' # atualizei a mensagem
-
+    message = 'Seu Post '+ postagem.titulo +' foi atualizado com sucesso!'
     # Verifica se o usuário autenticado é o autor da postagem
+    lista_grupos = ['administrador', 'colaborador']
     if request.user != postagem.usuario and not (
-            ['administrador', 'colaborador'] in request.user.groups.all() or request.user.is_superuser):
-            return redirect('postagem-forum-list')  # Redireciona para uma página de erro ou outra página adequada
+        any(grupo.name in lista_grupos for grupo in request.user.groups.all()) or request.user.is_superuser):
+        messages.warning(request, 'Seu usuário não tem permissões para acessar essa pagina.')
+        return redirect('lista-postagem-forum')  # Redireciona para uma página de erro ou outra página adequada
     
     if request.method == 'POST':
         form = PostagemForumForm(request.POST, instance=postagem)
         if form.is_valid():
-            form.save()
-            messages.warning(request, message)
-            return redirect(redirect_route) # Faz o redirect de acordo com a rota que estou.
+            
+            contar_imagens = postagem.postagem_imagens.count() # Quantidade de imagens sque já tenho no post
+            postagem_imagens = request.FILES.getlist('postagem_imagens') # Quantidade de imagens que estou enviando para salvar
+
+            if contar_imagens + len(postagem_imagens) > 5:
+                messages.error(request, 'Você só pode adicionar no máximo 5 imagens.')
+                return redirect(redirect_route)
+            else: 
+                form.save()
+                for f in postagem_imagens:  # for para pegar as imagens e salvar
+                    models.PostagemForumImagem.objects.create(postagem=postagem, imagem=f)
+                    
+                messages.warning(request,message)
+                return redirect(redirect_route)
         else:
             add_form_errors_to_messages(request, form) 
-    return JsonResponse({'status': 'Ok'}) # Coloca por enquanto.
+    return JsonResponse({'status': message}) # Coloca por enquanto.
 
 
 # Deletar Postagem
