@@ -185,9 +185,28 @@ def editar_comentario(request, comentario_id):
     return JsonResponse({'status': message})
 
 
+# Deletar Comentário
 def deletar_comentario(request, comentario_id):
     comentario = get_object_or_404(models.PostagemForumComentario, id=comentario_id)
     postagem_slug = comentario.postagem.slug
     comentario.delete()
     messages.success(request, 'Comentário deletado com sucesso!')
     return redirect('detalhe-postagem-forum', slug=postagem_slug)
+
+
+# Responder comentário
+def responder_comentario(request, comentario_id):
+    comentario = get_object_or_404(models.PostagemForumComentario, id=comentario_id)
+    if request.method == 'POST':
+        form = PostagemForumComentarioForm(request.POST)
+        message = 'Comentário Respondido com sucesso!'
+        if form.is_valid():
+            novo_comentario = form.save(commit=False)
+            novo_comentario.usuario = request.user
+            novo_comentario.parent_id = comentario_id
+            novo_comentario.postagem = comentario.postagem
+            novo_comentario.save()
+            messages.info(request, message)
+            return redirect('detalhe-postagem-forum',
+                            slug=comentario.postagem.slug)
+    return JsonResponse({'status': message})

@@ -31,11 +31,13 @@
 
 	            {% endif %}   
 	            {% if user.is_authenticated %}  
-	            <a href="#" class="link-secondary"><i class="fa fa-reply fa-1x mx-1"></i>Responder</a> 
+	            <a href="#" class="link-secondary"  data-bs-toggle="collapse" data-bs-target="#responderComentario{{comentario.id}}" 
+                	aria-expanded="false" aria-controls="collapseResponderComentario"><i class="fa fa-reply fa-1x mx-1"></i>Responder</a>
 	            {% endif %}   
 	        </div>  
 	    </div>  
 	</div>
 	{% include "comentarios/editar-comentario.html" %}
+	{% include "comentarios/responder-comentario.html" %}
 	{% endfor %}
 </div>
