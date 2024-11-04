@@ -26,3 +26,24 @@
     </div>
 </section>
 {% endif %}
+
+{% if bloco.bloco.nome == 'CARDS_2' %}
+<section>
+    <div class="container text-center py-lg-5">
+        <div class="row justify-content-center pb-5">
+            <div class="col-md-12">
+                <h2 class="mb-3">{{bloco.titulo}}</h2>
+            </div>
+        </div>
+        <div class="row gap-3">
+            {% for especialidade in bloco.conteudo.all %} 
+            <div class="col p-4 bg-light rounded-5">
+                <img src="{{especialidade.imagem.url}}" class="rounded-circle object-fit-cover" width="150" height="150" alt="">
+                <h3><a class="link-dark text-decoration-none" href="#">{{especialidade.titulo_1}}</a></h3>
+                <p>{{especialidade.descricao_1}}</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
