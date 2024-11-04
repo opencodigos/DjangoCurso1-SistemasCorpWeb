@@ -155,6 +155,7 @@ def remover_imagem(request):
     return JsonResponse({'message': 'Imagem removida com sucesso.'})
 
 
+# Adicionar Comentario
 def adicionar_comentario(request, slug):
     postagem = get_object_or_404(models.PostagemForum, slug=slug)
     message = 'Comentário Adcionado com sucesso!'
@@ -168,3 +169,18 @@ def adicionar_comentario(request, slug):
             messages.warning(request, message)
             return redirect('detalhe-postagem-forum', slug=postagem.slug)
     return JsonResponse({'status': message})
+
+
+# Editar Comentario
+def editar_comentario(request, comentario_id):
+    comentario = get_object_or_404(models.PostagemForumComentario, id=comentario_id)
+    message = 'Comentário Editado com sucesso!'
+    if request.method == 'POST':
+        form = PostagemForumComentarioForm(request.POST, instance=comentario)
+        if form.is_valid():
+            form.save()
+            messages.info(request, message)
+            return redirect('detalhe-postagem-forum',
+                            slug=comentario.postagem.slug)
+    return JsonResponse({'status': message})
+
