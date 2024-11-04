@@ -71,6 +71,7 @@ def deletar_postagem_forum(request, id):
 
 # Lista de Postagens no Dashboard (Gerenciar)
 def lista_postagem_forum(request):
+    form_dict = {}
     if request.path == '/forum/': # Pagina forum da home, mostrar tudo ativo.
         postagens = models.PostagemForum.objects.filter(ativo=True)
         template_view = 'lista-postagem-forum.html' # lista de post da rota /forum/
@@ -83,5 +84,10 @@ def lista_postagem_forum(request):
         else:
             # Usuário é do grupo usuário, pode ver apenas suas próprias postagens
             postagens = models.PostagemForum.objects.filter(usuario=user)
-    context = {'postagens': postagens}
-    return render(request, template_view, context)
+    
+    for el in postagens:
+        form = PostagemForumForm(instance=el) 
+        form_dict[el] = form
+        
+    context = {'postagens': postagens,'form_dict': form_dict}
+    return render(request, template_view, context) 
