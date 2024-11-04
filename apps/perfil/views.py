@@ -17,8 +17,8 @@ def perfil_view(request, username):
     if titulo_busca:
         filtros["titulo"] = titulo_busca # Adiciono no dicionario
         
-    # Utiliza o modelo das postagens do perfil
-    perfil_postagens = filtrar_modelo(perfil_postagens.model, **filtros) # Faz o filtro 
+        # Utiliza o modelo das postagens do perfil
+        perfil_postagens = filtrar_modelo(perfil_postagens, **filtros) # Faz o filtro 
         
     for el in perfil_postagens:
         form = PostagemForumForm(instance=el) 

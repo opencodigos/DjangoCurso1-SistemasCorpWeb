@@ -118,7 +118,7 @@ def lista_postagem_forum(request):
         else:
             postagens = models.PostagemForum.objects.filter(usuario=user)
             
-    postagens = filtrar_modelo(models.PostagemForum, **filtros)    
+    postagens = filtrar_modelo(postagens, **filtros)    
     
     for el in postagens:
         form = PostagemForumForm(instance=el) 
