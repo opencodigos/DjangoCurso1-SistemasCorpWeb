@@ -21,6 +21,15 @@
     border: none;
 }
 
+.banner {
+    background-image: url('https://i2.wp.com/cremers.org.br/wp-content/uploads/2021/12/prontuario_site_gettyimages.png');
+    padding: 8em 0;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+    position: relative;
+}
+
 @media (min-width: 968px) {
     .bloco {
         padding-left: 250px;
