@@ -1,14 +1,7 @@
 {% extends 'base.html' %}
 {% block title %}Pagina 1{% endblock %}
-{% block content %}
-	<div class="container mt-3"> 
-		{% if user.is_authenticated %}
-		<h4>Olá {{user.first_name}} {{user.last_name}}, </h4>
-		<h6>Bem Vindo(a)</h6>
-		{% endif %} 
-
-		<p>Pagina 1</p>
-		<p>Testando o context Global</p>
-		<p>{{social}}</p>
-	</div>
+{% block content %} 
+	{% for bloco in blocos %}
+		{% include "components/slide.html" %}
+	{% endfor %} 
 {% endblock %}
