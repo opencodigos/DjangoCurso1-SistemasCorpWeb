@@ -6,7 +6,7 @@ from django.core.paginator import Paginator
 from forum.forms import PostagemForumForm
 from django.contrib import messages  
 from forum import models
-
+from base.filtros import filtrar_modelo
 
 # Lista de Postagens.
 def lista_postagem_forum(request):
@@ -100,6 +100,12 @@ def deletar_postagem_forum(request, id):
 # Lista de Postagens no Dashboard (Gerenciar) 
 def lista_postagem_forum(request):
     form_dict = {}
+    filtros = {}
+    
+    titulo_busca = request.GET.get("titulo")
+    if titulo_busca:
+        filtros["titulo"] = titulo_busca
+        
     if request.path == '/forum/':
         postagens = models.PostagemForum.objects.filter(ativo=True)
         template_view = 'lista-postagem-forum.html'
@@ -110,7 +116,9 @@ def lista_postagem_forum(request):
             postagens = models.PostagemForum.objects.filter(ativo=True)
         else:
             postagens = models.PostagemForum.objects.filter(usuario=user)
-        
+            
+    postagens = filtrar_modelo(models.PostagemForum, **filtros)    
+    
     for el in postagens:
         form = PostagemForumForm(instance=el) 
         form_dict[el] = form 
