@@ -3,10 +3,12 @@ from django.conf import settings
 from .models import PostagemForum
 
 class PostagemForumForm(forms.ModelForm):
-    data_publicacao = forms.DateField(widget=forms.DateInput(format='%Y-%m-%d',attrs={'type': 'date'})) 
+    data_publicacao = forms.DateField(
+        widget=forms.DateInput(attrs={'type': 'date'},)
+        )  
     class Meta:
         model = PostagemForum
-        fields = ['usuario', 'titulo', 'descricao', 'data_publicacao', 'ativo', 'anexar_imagem']
+        fields = ['titulo', 'descricao', 'data_publicacao', 'ativo', 'anexar_imagem']
 
     def __init__(self, *args, **kwargs):
         self.user = kwargs.pop('user', None)
