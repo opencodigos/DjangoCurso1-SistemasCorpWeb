@@ -1,0 +1,14 @@
+{% extends "base_dashboard.html" %}
+{% block title %}Criar uma Postagem{% endblock %}
+{% block content_dash %}
+<div class="row"> 
+    <div class="col-md-8">
+        <form class="p-3 rounded-3 shadow-sm" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <h4>Criar Postagem</h4>
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-primary mx-2">Criar</button>
+        </form>
+    </div> 
+</div> 
+{% endblock %}
