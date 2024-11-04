@@ -49,3 +49,21 @@ class GoogleAnalytics(models.Model):
         model = self.__class__
         if model.objects.exists() and self.pk != model.objects.first().pk: 
             raise ValidationError('Já existe um Código GA cadastrado.')
+        
+        
+class Scripts(models.Model):
+    SCRIPT_PLACE = (
+        ('HD', 'Head/Cabeçalho'),
+        ('FT', 'Footer/Rodapé'),
+    )
+    name = models.CharField('Nome do Script', max_length=75)
+    script = models.TextField('Script', help_text='Adicione o script completo, inclusive com as tags <script></script>.')
+    place = models.CharField('Local', max_length=2, choices=SCRIPT_PLACE, help_text='Escolha onde o script deve ser inserido.')
+    is_active = models.BooleanField('Ativo?', default=True, help_text='Os scripts inativos deixarão de ser inseridos nas páginas.')
+
+    class Meta:
+        verbose_name = 'Script'
+        verbose_name_plural = 'Scripts'
+
+    def __str__(self) -> str:
+        return self.name

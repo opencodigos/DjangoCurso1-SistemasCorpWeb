@@ -119,6 +119,7 @@ TEMPLATES = [
                 'core.context_processors.context_logo', 
                 'core.context_processors.context_seo',
                 'core.context_processors.context_ga_code',
+                'core.context_processors.context_scripts', 
             ],
         },
     },

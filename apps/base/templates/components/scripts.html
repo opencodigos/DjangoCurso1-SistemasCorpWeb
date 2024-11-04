@@ -6,15 +6,20 @@
 <!-- Font Awesome -->
 <script defer src="https://use.fontawesome.com/releases/v5.15.4/js/all.js" integrity="sha384-rOA1PnstxnOBLzCLMcre8ybwbTmemjzdNlILg8O7z1lUkLXozs4DHonlDtnE7fpc" crossorigin="anonymous"></script>
 
-<script src="{% static 'js/script.js' %}"></script>
+<script src="{% static 'js/script.js' %}"></script> 
+
 {% block scripts %}{% endblock scripts %}
 
 <!-- Global site tag (gtag.js) - Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZKDYWDF34R"></script>
 <script>
-window.dataLayer = window.dataLayer || [];
-function gtag(){dataLayer.push(arguments);}
-gtag('js', new Date());
+	window.dataLayer = window.dataLayer || [];
+	function gtag(){dataLayer.push(arguments);}
+	gtag('js', new Date());
 
-gtag('config', '{{ ga_code.ga_id }}');
+	gtag('config', '{{ ga_code.ga_id }}');
 </script>
+ 
+{% for footer_script in footer_scripts %}
+    {{ footer_script.script|safe }}
+{% endfor %}
