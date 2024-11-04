@@ -31,7 +31,9 @@ def criar_postagem_forum(request):
 # Detalhes da postagem
 def detalhe_postagem_forum(request, id):
     postagem = get_object_or_404(models.PostagemForum, id=id)
-    return render(request, 'detalhe-postagem-forum.html', {'postagem': postagem})
+    form = PostagemForumForm(instance=postagem)
+    context = {'form': form, 'postagem': postagem}
+    return render(request,'detalhe-postagem-forum.html', context)
 
 
 # Edtar Postagem
