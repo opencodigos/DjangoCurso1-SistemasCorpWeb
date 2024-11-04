@@ -184,3 +184,10 @@ def editar_comentario(request, comentario_id):
                             slug=comentario.postagem.slug)
     return JsonResponse({'status': message})
 
+
+def deletar_comentario(request, comentario_id):
+    comentario = get_object_or_404(models.PostagemForumComentario, id=comentario_id)
+    postagem_slug = comentario.postagem.slug
+    comentario.delete()
+    messages.success(request, 'Comentário deletado com sucesso!')
+    return redirect('detalhe-postagem-forum', slug=postagem_slug)

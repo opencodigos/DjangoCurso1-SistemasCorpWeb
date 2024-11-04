@@ -21,7 +21,14 @@
 	            {% if request.user == comentario.usuario %}
 	            <a href="#" class="link-success" data-bs-toggle="collapse" data-bs-target="#editarComentario{{comentario.id}}" 
                 aria-expanded="false" aria-controls="collapseEditarComentario"><i class="fas fa-edit mx-2"></i></a>
-	            <a href="#" class="link-danger"><i class="fas fa-trash fa-1x mx-1"></i></a> 
+	            
+				<form id="form-remocao" method="POST" action="{% url 'deletar-comentario' comentario.id %}">
+					{% csrf_token %}
+					<button type="submit" class="link-danger btn btn-transparent m-0 p-0">
+						<i class="fas fa-trash fa-1x mx-1"></i>
+					</button>
+				</form>
+
 	            {% endif %}   
 	            {% if user.is_authenticated %}  
 	            <a href="#" class="link-secondary"><i class="fa fa-reply fa-1x mx-1"></i>Responder</a> 
