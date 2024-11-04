@@ -1,3 +1,6 @@
+import random # escolha aleatoria
+import string # contem todas as letras do alfabeto, etc.
+from django.core.mail import send_mail
 from django import forms 
 from django.core.exceptions import ValidationError
 from contas.models import MyUser 
@@ -41,8 +44,16 @@ class CustomUserCreationForm(forms.ModelForm):
         # Save the provided password in hashed format
         user = super().save(commit=False)
         if self.user.is_authenticated:
-            user.set_password('123') # Senha padrão 123 para todos usuarios adicionados
+            password = ''.join(random.choices(string.digits, k=6)) # Gerar uma senha 
+            user.set_password(password) # salvo essa senha
             user.force_change_password = True # força mudança de senha quando logar.
+            send_mail( # Envia email para usuario
+                'Sua senha provisória',
+                f'Sua senha provisório para entrar na plataforma é: {password}',
+                'email@email.com', # De (em produção usar o e-mail que está no settings: settings.DEFAULT_FROM_EMAIL)
+                [user.email], # para
+                fail_silently=False,
+            )
         else:
             user.set_password(self.cleaned_data["password1"])
         if commit:
