@@ -46,8 +46,8 @@
 						{% endif %}
 					</td>
 					<td scope="row">
-						<a class="link-warning" href=""><i class="fas fa-eye mx-2"></i></a>
-						<a class="ml-2 link-secondary" href="{% url 'atualizar_usuario' usuario.username %}"><i class="far fa-file mx-2"></i></a>
+						<a class="link-warning" href="{% url 'perfil' usuario.username %}"><i class="fas fa-eye mx-2"></i></a>
+						<a class="ml-2 link-secondary" href="{% url 'editar-perfil' usuario.username %}"><i class="far fa-file mx-2"></i></a>
 						<a class="ml-3 link-danger" href=""><i class="fas fa-trash mx-2"></i></a>
 					</td>
 				</tr>

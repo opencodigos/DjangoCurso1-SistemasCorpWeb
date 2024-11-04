@@ -9,9 +9,14 @@
             {% else %}
             <img src="{% static 'images/perfil/foto-padrao.jpg' %}" class="img-thumbnail border rounded" width="280" alt="">
             {% endif %}  
-            <button class="btn btn-warning" onclick="location.href='#'">
+            
+            {% if request.user == obj.perfil.usuario or request.user.is_superuser %}
+            <a class="btn btn-warning" href="{% url 'editar-perfil' obj.username %}" role="button">
                 <i class="fas fa-cog"></i> Editar Perfil
-            </button>
+            </a>
+            {% endif %}
+                
+
         </div> 
         <div class="perfil-info mt-3"> 
             <h2>{{obj.first_name}} {{obj.last_name}}</h2>
