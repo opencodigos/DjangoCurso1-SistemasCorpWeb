@@ -45,3 +45,22 @@
 {% include "modal-form-postagem-forum.html" %}  
 {% include "modal-deletar-postagem-forum.html" %}
 {% endblock %}
+{% block scripts %}
+    <script> 
+        document.addEventListener("DOMContentLoaded", function () {
+            const formRemocao = document.getElementById("form-remocao");
+    
+            formRemocao.addEventListener("submit", function (event) {
+                event.preventDefault(); // Impede o envio padrão do formulário
+    
+                const confirmacao = confirm("Tem certeza de que deseja remover o comentário?");
+    
+                if (confirmacao) {
+                    // Se o usuário confirmar, envie o formulário
+                    formRemocao.submit();
+                }
+            });
+        });
+
+    </script>
+{% endblock scripts %}
