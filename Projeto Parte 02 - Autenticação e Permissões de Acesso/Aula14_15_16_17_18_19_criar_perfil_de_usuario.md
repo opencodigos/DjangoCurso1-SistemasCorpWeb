@@ -1,6 +1,6 @@
 # **Criar Perfil de Usuário**
 
-**Dev: Letícia Lima**
+**Dev: Letícia Lima**  
 
 Já que estamos no embalo de contas e autenticação vamos aproveitar e criar um perfil para usuário. 
 
@@ -11,8 +11,7 @@ python manage.py startapp perfil
 Registrar seu app no settings do projeto e colocar na pasta apps.
 
 ```python
-PROJECT_APPS = [
-    'apps.base',
+PROJECT_APPS = [ 
     'apps.perfil', # adicionar
 ]
 ```
@@ -24,7 +23,7 @@ from django.conf import settings
 from django.db import models
 
 class Perfil(models.Model):   
-    usuario = models.OneToOneField(settings.AUTH_USER_MODEL,on_delete=models.CASCADE, related_name='perfil') 
+    usuario = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='perfil') 
     foto = models.ImageField(upload_to='perfil/foto/', default='perfil/foto-padrao.png', blank=True)  
     ocupacao = models.CharField(max_length=120, blank=True)
     descricao = models.TextField(blank=True)  
@@ -44,19 +43,21 @@ class Perfil(models.Model):
 apps/perfil/admin.py
 
 ```python
-from perfil.models import Perfil
+from django.contrib import admin
+from .models import Perfil
 
-# Register your models here.
 admin.site.register(Perfil)
 ```
 
 Agora vamos adicionar uma instancia para perfil toda vez que criarmos um usuário no sistema.
 
-Documentação: https://docs.djangoproject.com/en/4.2/topics/signals/
+**Documentação:** https://docs.djangoproject.com/pt-br/5.1/topics/signals/
 
-https://docs.djangoproject.com/en/4.2/ref/signals/
+https://docs.djangoproject.com/pt-br/5.1/ref/signals/
 
-Os Signals em Django são uma forma de permitir que determinadas ações (como criar, editar ou excluir um objeto) disparem uma função que pode executar ações adicionais no momento em que essas ações ocorrem.
+## Criar Perfil automaticamente (Perfil)
+
+Os **Signals** em Django são uma forma de permitir que determinadas ações (como criar, editar ou excluir um objeto) disparem uma função que pode executar ações adicionais no momento em que essas ações ocorrem.
 
 ```python
 from django.db.models.signals import post_save
@@ -72,19 +73,15 @@ def create_perfil(sender, **kwargs):
         Perfil.objects.create(usuario=kwargs['instance'])
 ```
 
-### **Alternativa que gosto de usar.**
+### **Alternativa**
 
-Podemos simplesmente colocar na views para criar essa instancia. 
-
-```python
-Perfil.objects.create(usuario=usuario) # Cria instancia perfil do usuário
-```
-
-Por exemplo a views de criar um novo usuário no sistema. Podemos colocar essa regra para criar uma instancia na tabela de perfil para o novo usuário.
+Podemos simplesmente colocar na views para criar essa instancia. Isso funcionaria na view e não quando o cadastro é feito pelo django admin. 
 
 apps/contas/views.py
 
 ```python
+from perfil.models import Perfil
+
 def register_view(request):
     ...
         if form.is_valid():
@@ -94,14 +91,14 @@ def register_view(request):
             
             Perfil.objects.create(usuario=usuario) # Cria instancia perfil do usuário
             
-           ...
+            ...
 ```
 
 ---
 
 ## Vamos criar um template para exibir perfil.
 
-documentação: https://docs.djangoproject.com/en/4.2/ref/models/querysets/
+documentação: https://docs.djangoproject.com/pt-br/5.1/ref/models/querysets/
 
 procure por select_related.
 
@@ -119,7 +116,7 @@ from contas.models import MyUser
 
 def perfil_view(request, id):
     perfil = get_object_or_404(MyUser.objects.select_related('perfil'), id=id)
-    context = {'obg': perfil}
+    context = {'obj': perfil}
     return render(request, 'perfil.html', context)
 ```
 
@@ -167,6 +164,14 @@ apps/perfil/templates/perfil.html
 {% endblock %}
 ```
 
+Verifica em core/urls.py se está adicionado o path do perfil. 
+
+```python
+urlpatterns = [ 
+    path('perfil/', include('perfil.urls')), # Adicionar
+]
+```
+
 ---
 
 ## **Chamar o `username` na URL**
@@ -187,17 +192,37 @@ apps/contas/models.py
 import re
 
 class MyUser(AbstractBaseUser, PermissionsMixin):
-    username = models.CharField(max_length=100,unique=True,blank=True)
-	...
+    username = models.CharField(max_length=100,unique=True,null=True) # Adiciona 
+    email = models.EmailField(unique=True,max_length=255)
+    first_name = models.CharField(max_length=100)
+    last_name = models.CharField(max_length=100)
+    is_active = models.BooleanField(default=True)
+    is_staff = models.BooleanField(default=False)
+    date_joined = models.DateTimeField('date joined', auto_now_add=True) 
+    
+    USERNAME_FIELD = 'email'
+    EMAIL_FIELD = 'email' # Adiciona 
+    REQUIRED_FIELDS = ['first_name', 'last_name']
 
-	def save(self, *args, **kwargs):
+    objects = MyUserManager()
+
+    def __str__(self):
+        return self.email
+
+    def get_full_name(self):
+        return f'{self.first_name} {self.last_name}'
+
+    def get_short_name(self):
+        return self.first_name 
+        
+    def save(self, *args, **kwargs): # Adiciona 
         get_email = self.email.split("@")[0]
         email = re.sub(r"[^a-zA-Z0-9]","",get_email)
         self.username = email
         super(MyUser, self).save(*args, **kwargs)
 ```
 
- 
+    
 
 lembrando que agora todos os usuarios precisam ter um nome de username para acessar o perfil. Os novos seram gerados automaticos mas os antigos temos que criar.
 
@@ -209,7 +234,7 @@ from contas.models import MyUser
 
 def perfil_view(request, username):
     perfil = get_object_or_404(MyUser.objects.select_related('perfil'), username=username)
-    context = {'obg': perfil}
+    context = {'obj': perfil}
     return render(request, 'perfil.html', context)
 ```
 
@@ -247,9 +272,9 @@ Para os registros existentes se voce pode apagar e adicionar novamente, ok. Mas 
 
 Vamos utilizar o command do proprio django e criar um handler. 
 
-https://docs.djangoproject.com/en/4.2/howto/custom-management-commands/
+https://docs.djangoproject.com/pt-br/5.1/howto/custom-management-commands/
 
-Cria esse script para fazer essa modificação.
+**Cria esse script para fazer essa modificação.**
 
 apps/contas/management/commands/criaUsername.py
 
@@ -264,7 +289,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         myuser = MyUser.objects.all()
         for user in myuser:
-             
+                
             get_email = user.email.split("@")[0]
             email = re.sub(r"[^a-zA-Z0-9]","",get_email)
             user.username = email
@@ -274,6 +299,8 @@ class Command(BaseCommand):
                 self.style.SUCCESS('username Atualizado com sucesso "%s"' % user.username)
             )
 ```
+
+![image.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/a063a051-4fb5-4b47-ad10-54cee14f4f39/d585c82c-8365-431d-be95-2cfa877218f9/image.png)
 
 para rodar esse script 
 
@@ -286,12 +313,17 @@ Feito essa modificação, já podemos testar a rota do perfil.
 http://localhost:8000/perfil/leticia/
 
 apps/base/templates/components/navbar.html
+
 ```python
-...
-<span class="p-2">
-    <a class="nav-link" href="{% url 'perfil' user.username %}">
-        <i class="fas fa-user mx-2"></i>{{user.first_name}} {{user.last_name}}
-    </a>
-</span>
-...
+{% if user.is_authenticated %}
+<span class="p-2"> <!-- Adiciona -->
+            <a class="nav-link" href="{% url 'perfil' user.username %}">
+                <i class="fas fa-user mx-2"></i>{{user.first_name}} {{user.last_name}}
+            </a>
+        </span>
+<button class="btn btn-danger" data-bs-toggle="modal" href="#logoutModal">Logout</button>
+{% else %}
+<button class="btn btn-primary mx-2" onclick="location.href='{% url 'login' %}'">Entrar</button>
+<button class="btn btn-warning" onclick="location.href='{% url 'register' %}'">Cadastrar-se</button>
+{% endif %}
 ```

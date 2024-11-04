@@ -1,7 +1,7 @@
 # **Rota Session Timeout**
 
-**Dev: Letícia Lima**
-
+**Dev: Letícia Lima** 
+ 
 O django-session-timeout é uma biblioteca que adiciona funcionalidade de expiração automática de sessões de usuário inativas em projetos Django.
 Com essa biblioteca, é possível definir o tempo limite de inatividade para expirar a sessão, além de poder personalizar a mensagem de aviso de expiração.
 
@@ -34,7 +34,7 @@ SESSION_TIMEOUT_REDIRECT = 'http://localhost:8000/'
 
 **`SESSION_TIMEOUT_REDIRECT`** URL para redirecionar o usuário quando a sessão expirar. Nesse caso, estamos redirecionando para **`http://localhost:8000/`**
 
-`**SESSION_EXPIRE_AFTER_LAST_ACTIVITY_GRACE_PERIOD**` especifica um período de carência (em segundos) para o tempo limite de expiração da sessão, ou seja, se um usuário fizer uma ação antes do período de carência expirar, o tempo limite será renovado e a sessão não será expirada.
+**`SESSION_EXPIRE_AFTER_LAST_ACTIVITY_GRACE_PERIOD`** especifica um período de carência (em segundos) para o tempo limite de expiração da sessão, ou seja, se um usuário fizer uma ação antes do período de carência expirar, o tempo limite será renovado e a sessão não será expirada.
 
 ```python
 LOGIN_URL = 'login'
@@ -44,13 +44,22 @@ LOGOUT_REDIRECT_URL = '/'
 
 Vamos criar a view para exibir mensagem para usuario que foi desconectado por inatividade.
 
+apps/contas/views.py
+
 ```python
 def timeout_view(request):
     return render(request, 'timeout.html')
 ```
 
+apps/contas/urls.py
+
 ```python
-path('timeout/',  views.timeout_view, name='timeout'),
+from django.urls import path 
+from contas import views
+
+urlpatterns = [
+    path('desconectado-inatividade/',  views.timeout_view, name='timeout'), 
+]
 ```
 
 apps/contas/templates/timeout.html
@@ -71,3 +80,17 @@ apps/contas/templates/timeout.html
 e no settings atualizar a rota de redirecionamento.
 
 `SESSION_TIMEOUT_REDIRECT = 'http://localhost:8000/contas/desconectado-inatividade/'`
+
+Verifica se contas está registrado no [urls.py](http://urls.py) do projeto 
+
+core/urls.py
+
+```python
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('test-logging/', test_logging_view, name='test_logging'),
+    path('base/', base_view, name='base'),
+    path('contas/', include('contas.urls')), # Adicionar contas
+    path('', include('pages.urls')), # url do app 
+]
+```

@@ -1,7 +1,7 @@
 # **Rota Lista Postagem no Perfil do Usuário**
 
-**Dev: Letícia Lima**
-
+**Dev: Letícia Lima** 
+    
 No perfil podemos fazer um tratamento diferente. Primeiro no template a gente prepara ele assim para ter a parte de filtro e lista de postagens.
 
 apps/perfil/templates/perfil.html 
@@ -12,8 +12,7 @@ apps/perfil/templates/perfil.html
     <div class="row g-2 mt-5">
         <div class="col-md-4 bg-light">
             <form class="d-flex" role="search" method="GET">
-                <input class="form-control me-2" type="search" 
-											name="title_post" placeholder="Pesquisar..." aria-label="Search">
+                <input class="form-control me-2" type="search" name="title_post" placeholder="Pesquisar..." aria-label="Search">
                 <button class="btn btn-outline-dark" type="submit">Pesquisar</button>
             </form>
         </div>
@@ -61,16 +60,11 @@ Futuramente podemos ate criar um componente com esse template. Por que vocês pe
 <div class="p-3 mb-3 rounded-3 shadow-sm">
     <div class="align-items-center">
         <div class="d-flex justify-content-between">
-            <h5><a href="{% url 'detalhe-postagem-forum' postagem.id %}">
-							{{postagem.titulo}}</a></h5>
+            <h5><a href="{% url 'detalhe-postagem-forum' postagem.id %}">{{postagem.titulo}}</a></h5>
             <div class="div">
                 {% if postagem.usuario == request.user %}
-                <a class="btn btn-warning" 
-										href="{% url 'editar-postagem-forum' postagem.id %}">
-								<i class="fas fa-edit"></i></a>  
-                <a class="btn btn-danger" data-bs-toggle="modal" 
-										href="#confirmarExclusaoModal{{postagem.id}}" role="button">
-											<i class="fas fa-trash"></i></a>  
+                <a class="btn btn-warning" href="{% url 'editar-postagem-forum' postagem.id %}"><i class="fas fa-edit"></i></a>  
+                <a class="btn btn-danger" data-bs-toggle="modal" href="#confirmarExclusaoModal{{postagem.id}}" role="button"><i class="fas fa-trash"></i></a>  
                 {% endif %}
             </div>
         </div>  

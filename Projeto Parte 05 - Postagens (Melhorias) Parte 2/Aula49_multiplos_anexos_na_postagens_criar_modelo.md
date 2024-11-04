@@ -2,8 +2,8 @@
 
 Dev: Letícia Lima
 
-### Criar Modelo
-
+### Criar Modelo 
+    
 **Ótimas novidades!** Para tornar as coisas mais interessantes, vamos criar uma nova funcionalidade que permitirá aos usuários fazer o upload de vários arquivos de uma vez. Vamos estabelecer algumas regras para isso. **Por exemplo, cada usuário poderá anexar no máximo 5 arquivos. Se já houver algum anexo, o usuário precisará identificar quantos arquivos já foram anexados e verificar se ainda faltam 5 arquivos para atingir o limite.**
 
 Nessa implementação, utilizaremos a **AJAX apenas para a deletar as imagens**. Seria relativamente fácil criar uma postagem para salvar várias imagens. **No entanto, o desafio interessante consiste em mostrar visualmente como editar essas imagens.** Além disso, ofereceremos aos usuários a opção de remover completamente o anexo tanto do sistema quanto do banco de dados.
@@ -26,16 +26,14 @@ apps/forum/models.py
 
 ```python
 class PostagemForum(models.Model):
-    usuario = models.ForeignKey(user, 
-						related_name="user_postagem_forum", on_delete=models.CASCADE)  
-   ...
+    usuario = models.ForeignKey(user, related_name="user_postagem_forum", on_delete=models.CASCADE)  
+    ...
     # anexar_imagem = models.ImageField('Imagem Anexo', upload_to='postagem-forum/', blank=True, null=True)
 
 class PostagemForumImagem(models.Model):
     imagem = models.FileField('Imagem Anexo', upload_to='postagem-forum/')
-    postagem = models.ForeignKey(PostagemForum, 
-					related_name='postagem_imagens', on_delete=models.CASCADE)
- 
+    postagem = models.ForeignKey(PostagemForum, related_name='postagem_imagens', on_delete=models.CASCADE)
+    
     def __str__(self):
         return self.postagem.titulo
     
@@ -45,10 +43,19 @@ class PostagemForumImagem(models.Model):
             raise ValidationError('Você só pode adicionar no máximo 5 anexos.')
 ```
 
+No Django 5.1 se aparecer esse erro vc descomenta a linha 
+
+`anexar_imagem = models.ImageField('Imagem Anexo', upload_to='postagem-forum/', blank=True, null=True)`
+tenta as migrações novamente.
+
+```python
+django.core.exceptions.FieldError: Unknown field(s) (anexar_imagem) specified for PostagemForum
+```
+
 apps/forum/admin.py
 
 **Para desmonstração no Django Admin:** 
-https://docs.djangoproject.com/pt-br/4.2/ref/contrib/admin/#django.contrib.admin.TabularInline
+https://docs.djangoproject.com/pt-br/5.1/ref/contrib/admin/#django.contrib.admin.TabularInline
 
 ```python
 from django.contrib import admin
@@ -66,6 +73,12 @@ class PostagemForumAdmin(admin.ModelAdmin):
 # Register your models here.
 admin.site.register(models.PostagemForum, PostagemForumAdmin)
 # admin.site.register(models.PostagemForumImagem)
+```
+
+Não esqueça de rodar 
+
+```python
+python manage.py makemigrations && python manage.py migrate
 ```
 
 Inicialmente já conseguimos testar e ver como funciona. **Maximo 5 anexos.**

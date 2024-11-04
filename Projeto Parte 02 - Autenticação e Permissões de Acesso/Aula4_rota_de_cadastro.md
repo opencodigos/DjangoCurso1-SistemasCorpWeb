@@ -1,7 +1,7 @@
 # **Rota de Cadastro**
 
-**Dev: Letícia Lima**
-
+**Dev: Letícia Lima** 
+    
 Na parte de cadastro vamos configurar o forms.py para criar o formulário de cadastro de cliente na plataforma.
 
 apps/contas/forms.py
@@ -14,7 +14,7 @@ from contas.models import MyUser
 
 class CustomUserCreationForm(UserCreationForm):
     password1 = forms.CharField(label="Senha", widget=forms.PasswordInput) 
-    password2 = forms.CharField(label="Confirmação de Senha", widget=forms.PasswordInput)
+    password2 = forms.CharField(label="Confirmar Senha", widget=forms.PasswordInput)
 
     class Meta:
         model = MyUser
@@ -54,33 +54,34 @@ class CustomUserCreationForm(UserCreationForm):
 apps/contas/views.py
 
 ```python
+# Registrar um usuário
 def register_view(request):
-    if request.method == "POST":
-        form = CustomUserCreationForm(request.POST)
-        if form.is_valid():
+    if request.method == "POST": # metodo POST
+        form = CustomUserCreationForm(request.POST) # Formulário que criamos no forms.py
+        if form.is_valid(): # se formulário for valido registra usuário
             usuario = form.save(commit=False)
             usuario.is_valid = False
             usuario.save()
             messages.success(request, 'Registrado. Agora faça o login para começar!')
-            return redirect('login')
+            return redirect('login') # Redireciona para login
         else:
             # Tratar quando usuario já existe, senhas... etc...
             messages.error(request, 'A senha deve ter pelo menos 1 caractere maiúsculo, \
                 1 caractere especial e no minimo 8 caracteres.')
-    form = CustomUserCreationForm()
-    return render(request, "registration/register.html",{"form": form})
+    form = CustomUserCreationForm() # Inicialmente carrega o formulário no template, os campos etc..
+    return render(request, "register.html",{"form": form})
 ```
 
 apps/contas/templates/register.html
 
 ```python
 {% extends 'base_auth.html' %}
-{% block title %}Login{% endblock %}
+{% block title %}Criar Conta{% endblock %}
 {% block content_auth %}
 <form class="row" method="post" action="{% url 'register' %}">
     {% csrf_token %}
     <h4>Criar uma conta</h4> 
-		 {{ form}}
+            {{ form}}
     <button class="btn btn-primary mt-3" type="submit">Registrar</button>
     <div class="mt-3">
         <span><a class="text-reset" href="{% url 'login' %}">Fazer Login</a></span>
@@ -98,30 +99,36 @@ urlpatterns = [
 ]
 ```
 
+### Ajustes
+
 para ajudar os campos no template podemos fazer essa modificação.
+
+apps/contas/templates/register.html
 
 ```html
 {% for field in form %}
-  {% if field == form.email %}
-  <div class="col-md-12">
-      <div class="mt-3">
-      {{ field.label_tag }}
-      {{ field }}
-      </div>
-  </div>
-  {% endif %}
-  {% if not field == form.email %}
-  <div class="col-md-6">
-      <div class="mt-3">
-      {{ field.label_tag }}
-      {{ field }}
-      </div>
-  </div>
-  {% endif %}
-  {% endfor %}
+    {% if field == form.email %}
+    <div class="col-md-12">
+        <div class="mt-3">
+        {{ field.label_tag }}
+        {{ field }}
+        </div>
+    </div>
+    {% endif %}
+    {% if not field == form.email %}
+    <div class="col-md-6">
+        <div class="mt-3">
+        {{ field.label_tag }}
+        {{ field }}
+        </div>
+    </div>
+    {% endif %}
+    {% endfor %}
 ```
 
 Criar um usuário e adicionar o mesmo no grupo de usuário tipo padrão. Para que o mesmo tenha acesso ao perfil e possa criar as postagens.
+
+apps/contas/views.py
 
 ```python
 from django.contrib.auth.models import Group, User 
@@ -134,12 +141,20 @@ def register_view(request):
 
             group = Group.objects.get(name='usuario')
             usuario.groups.add(group)
-		...
+        ...
 ```
 
-No final fica assim 
+**No final views fica assim** 
+
+apps/contas/views.py
 
 ```python
+from django.contrib import messages
+from django.contrib.auth import authenticate, login
+from django.contrib.auth.models import Group
+from django.shortcuts import render, redirect
+from contas.forms import CustomUserCreationForm 
+
 def register_view(request):
     if request.user.is_authenticated:
         return redirect('home')
@@ -164,6 +179,7 @@ def register_view(request):
 ```
 
 apps/contas/templates/login.html
+
 ```html
 <span>Ainda não tem conta? <a class="text-reset" href="{% url 'register' %}">Cadastre-se</a></span><br>
 ```

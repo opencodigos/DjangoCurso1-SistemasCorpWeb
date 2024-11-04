@@ -1,4 +1,4 @@
-# **Lista de Usuários**
+## **Lista de Usuários**
 
 Vamos criar uma lista de usuário, na nossa view chamando o todos os usuarios de MyUser e tabela relacionada perfil para pegar as informações. E um filtro is_superuser=False para não aparecer os super usuarios.
 
@@ -10,8 +10,8 @@ apps/contas/views.py
 @login_required
 @grupo_colaborador_required(['administrador','colaborador'])
 def lista_usuarios(request): # Lista Cliente 
-    lista_usuarios = MyUser.objects.select_related('perfil').filter(is_superuser=False) 
-    return render(request, 'lista-usuarios.html', {'lista_usuarios': lista_usuarios})
+	lista_usuarios = MyUser.objects.select_related('perfil').filter(is_superuser=False) 
+	return render(request, 'lista-usuarios.html', {'lista_usuarios': lista_usuarios})
 ```
 
 apps/contas/urls.py
@@ -41,7 +41,7 @@ apps/contas/templates/lista-usuarios.html
 			<thead class="table-light">
 				<tr>
 					<th scope="col">#</th>
-                    <th scope="col">Foto</th>
+					<th scope="col">Foto</th>
 					<th scope="col">Nome/Sobrenome</th>
 					<th scope="col">E-mail</th>
 					<th scope="col">Data Criação</th>
@@ -52,14 +52,14 @@ apps/contas/templates/lista-usuarios.html
 			{% for usuario in lista_usuarios %}
 			<tbody>
 				<tr>
-                    <td scope="row">{{ usuario.id }}</td>
-                    <td scope="row">
-                        {% if usuario.perfil.foto %}
-                        <img src="{{usuario.perfil.foto.url}}" class="img-thumbnail border rounded" width="30" alt="">  
-                        {% else %}
-                        <img src="{% static 'images/perfil/foto-padrao.jpg' %}" class="img-thumbnail border rounded" width="30" alt="">
-                        {% endif %}
-                    </td>
+			<td scope="row">{{ usuario.id }}</td>
+			<td scope="row">
+				{% if usuario.perfil.foto %}
+				<img src="{{usuario.perfil.foto.url}}" class="img-thumbnail border rounded" width="30" alt="">  
+				{% else %}
+				<img src="{% static 'images/perfil/foto-padrao.jpg' %}" class="img-thumbnail border rounded" width="30" alt="">
+				{% endif %}
+			</td>
 					<td scope="row">{{ usuario.first_name }} {{ usuario.last_name }}</td>
 					<td scope="row">{{ usuario.email }}</td>
 					<td scope="row">{{ usuario.date_joined|date:'d/m/Y'}}</td>
@@ -90,10 +90,12 @@ apps/base/templates/base_dashboard.html
 
 ```python
 <button type="button" class="btn btn-light" onclick="location.href='{% url 'lista_usuarios' %}'">
-                <i class="fas fa-users me-2"></i>Usuários do Sistema</button>
+				<i class="fas fa-users me-2"></i>Usuários do Sistema</button>
 ```
 
 Se quiser pode adicionar nas configurações de conta tambem. 
+
+apps/config/templates/configuracao.html
 
 `<li><a href="{% url 'lista_usuarios' %}">Lista Todos usuários</a></li>`
 
@@ -101,12 +103,13 @@ Se quiser pode adicionar nas configurações de conta tambem.
 
 app contas e a permissão de contas.view_myuser. Significa que somente usuarios com a permissão para acessar pode ver esse botão no template. 
 
-Doc: https://docs.djangoproject.com/en/4.2/topics/auth/default/#permissions
+Doc: https://docs.djangoproject.com/pt-br/5.1/topics/auth/default/#permissions-and-authorization
 
 exemplo:
+
 ```python
 {% if perms.contas.view_myuser %}
 <button type="button" class="btn btn-light" onclick="location.href='{% url 'lista_usuarios' %}'">
-                <i class="fas fa-users me-2"></i>Usuários do Sistema</button>
-{% endif %}
+				<i class="fas fa-users me-2"></i>Usuários do Sistema</button>
+{% endif %} 
 ```

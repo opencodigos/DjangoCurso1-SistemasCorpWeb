@@ -1,7 +1,7 @@
 # **Multiplos Anexos na Postagem (Bonus)** (Editar Postagem)
 
 Dev: Letícia Lima
-
+ 
 ### Rota Editar Postagem
 
 Na parte de editar as postagens vamos modificar essa função **`editar_postagem_forum`** é a função principal para tratar e salvar as postagens, indenpendente da rota que estamos.
@@ -10,11 +10,11 @@ O primeiro passo é deixar a view bem parecida com o que ficamos na rota cadastr
 
 Isso podemos pegar o objeto a postagem e acessar todos os arquivos relacionados com essa postagem. 
 
-`**contar_imagens = postagem.postagem_imagens.count()` Conta quantos anexos tem.**
+**`contar_imagens = postagem.postagem_imagens.count()` Conta quantos anexos tem.**
 
 **`postagem_imagens = request.FILES.getlist('postagem_imagens')` Quantos o usuario está enviando.**
 
-Nisso aplicamos uma condição. `**if contar_imagens + len(postagem_imagens) > 5:`** 
+Nisso aplicamos uma condição. **`if contar_imagens + len(postagem_imagens) > 5:`** 
 
 apps/forum/views.py
 
@@ -44,8 +44,8 @@ def editar_postagem_forum(request, id):
                 return redirect(redirect_route)
             else: 
                 form.save()
-                for f in postagem_imagens: # for para pegar as imagens e salvar.
-                    models.PostagemForumImagem.objects.create(postagem=form, imagem=f)
+                for f in postagem_imagens:  # for para pegar as imagens e salvar
+                    models.PostagemForumImagem.objects.create(postagem=postagem, imagem=f)
                     
                 messages.warning(request,message)
                 return redirect(redirect_route)
@@ -61,24 +61,24 @@ apps/forum/template/modal-form-postagem-forum.html
 ```python
 ...
 <div class="modal-body">
-	  <form method="post" action="{% url 'editar-postagem-forum' postagem.id %}" enctype="multipart/form-data">
-	      {% csrf_token %}
-	      {{ form.as_p }} 
-				<input type="hidden" name="redirect_route" value="{{ request.path }}">
-	      <button type="submit" class="btn btn-primary mx-2">Salvar</button>
-	      <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-	  </form>
+        <form method="post" action="{% url 'editar-postagem-forum' postagem.id %}" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.as_p }} 
+                <input type="hidden" name="redirect_route" value="{{ request.path }}">
+            <button type="submit" class="btn btn-primary mx-2">Salvar</button>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+        </form>
 
-		<div class="d-flex g-3"> # Adicionamos esse for para exibir as imagens no formulário
-			{% for img in postagem.postagem_imagens.all %} # Pegando todas as imagens relacionadas com a postagem
-			<div class="position-relative p-2">
-					<a href="#" class="position-absolute badge bg-danger">
-							<i class="fas fa-times"></i>
-					</a>
-					<img src="{{ img.imagem.url }}" class="img-fluid rounded" alt="{{img.id}}" width="100"> 
-			</div>
-			{% endfor %}
-		</div>
+        <div class="d-flex g-3"> # Adicionamos esse for para exibir as imagens no formulário
+            {% for img in postagem.postagem_imagens.all %} # Pegando todas as imagens relacionadas com a postagem
+            <div class="position-relative p-2">
+                    <a href="#" class="position-absolute badge bg-danger">
+                            <i class="fas fa-times"></i>
+                    </a>
+                    <img src="{{ img.imagem.url }}" class="img-fluid rounded" alt="{{img.id}}" width="100"> 
+            </div>
+            {% endfor %}
+        </div>
 </div>
 ...
 ```

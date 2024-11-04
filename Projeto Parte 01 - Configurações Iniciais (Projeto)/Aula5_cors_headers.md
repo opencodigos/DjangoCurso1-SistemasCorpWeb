@@ -1,7 +1,6 @@
 ***CORS HEADERS***
 
-**Dev: Letícia Lima**
-Se seu back-end e front-end estiverem em servidores diferentes, você um dia vai precisará disso. Segue configuração:
+**Dev: Letícia Lima** 
 
 Para configurar os Cors Headers precisamos instalar uma biblioteca.
 
@@ -11,7 +10,7 @@ O CORS (Cross-Origin Resource Sharing) é um mecanismo de segurança do navegado
 
 No entanto, às vezes é necessário permitir que um site acesse recursos em outro site. É aí que o CORS Headers entra em jogo. O CORS Headers é uma biblioteca do Django que permite que você configure seu servidor para permitir que um site acesse seus recursos.
 
-Ao instalar o CORS Headers, você pode adicionar uma configuração simples no seu arquivo de configuração (settings.py) para permitir que um site específico acesse seus recursos. Por exemplo, se você tiver um site hospedado em "**[http://meusite.com](http://meusite.com/)**" e quiser permitir que ele acesse seus recursos, você pode adicionar o seguinte ao seu **settings.py**:
+Ao instalar o CORS Headers, você pode adicionar uma configuração simples no seu arquivo de configuração (settings.py) para permitir que um site específico acesse seus recursos. Por exemplo, se você tiver um site hospedado em "[**http://meusite.com**](http://meusite.com/)" e quiser permitir que ele acesse seus recursos, você pode adicionar o seguinte ao seu **settings.py**:
 
 Instalar a Biblioteca na nossa aplicação
 
@@ -23,19 +22,15 @@ from corsheaders.defaults import default_headers
 
 ```python
 # Adicionar no settings.py
-INSTALLED_APPS = [
-    ...,
-    "corsheaders",
-    ...,
+THIRD_APPS = [ # update 03/11/2024 altera para THIRD_APPS
+	"corsheaders", 
 ]
 ```
 
-```
+```python
 MIDDLEWARE = [
-    ...,
-    "corsheaders.middleware.CorsMiddleware",
-		"django.middleware.common.CommonMiddleware",
-    ...,
+		'corsheaders.middleware.CorsMiddleware', # CORS
+	'django.middleware.common.CommonMiddleware',
 ]
 ```
 
@@ -45,22 +40,22 @@ ALLOWED_HOSTS = [
 		'127.0.0.1',  
 ]
 
-CORS_ALLOW_HEADERS = list(default_headers) + [
-    	'X-Register',
-]
-
 # CORS Config
+CORS_ALLOW_HEADERS = list(default_headers) + [
+	'X-Register',
+] 
+
 CORS_ORIGIN_ALLOW_ALL = True  
 # CORS_ORIGIN_ALLOW_ALL como True, o que permite que qualquer site acesse seus recursos.
 # Defina como False e adicione o site no CORS_ORIGIN_WHITELIST onde somente o site da lista acesse os seus recursos.
 
 CORS_ALLOW_CREDENTIALS = False 
 
-CORS_ORIGIN_WHITELIST = ['http://meusite.com',] # Lista.
+CORS_ORIGIN_WHITELIST = ['http://meusite.com',] # Lista. 
 ```
 
 SSL and Cookies Vamos deixar configurado tambem. No final do video vamos fazer deploy.
-doc: https://docs.djangoproject.com/en/4.1/ref/settings/
+doc: https://docs.djangoproject.com/pt-br/5.1/ref/settings/
 
 ```python
 if not DEBUG:
@@ -82,4 +77,4 @@ if not DEBUG:
 
 Essas configurações ajudam a proteger a aplicação contra ataques de interceptação e garantem que as informações confidenciais do usuário sejam mantidas seguras.
 
-Com essas configurações, você permitirá que o site "**[http://meusite.com](http://meusite.com/)**" acesse seus recursos. É importante lembrar que, para que isso funcione, o site que está acessando seus recursos também deve ter a configuração CORS correta.
+Com essas configurações, você permitirá que o site "[**http://meusite.com**](http://meusite.com/)" acesse seus recursos. É importante lembrar que, para que isso funcione, o site que está acessando seus recursos também deve ter a configuração CORS correta.

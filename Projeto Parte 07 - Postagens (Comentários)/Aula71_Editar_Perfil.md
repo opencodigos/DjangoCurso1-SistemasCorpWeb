@@ -1,8 +1,6 @@
 # Editar Perfil
 
-Dev: Letícia Lima
-
-### **Editar Perfil**
+Dev: Letícia Lima 
 
 apps/perfil/forms.py
 
@@ -18,7 +16,7 @@ class PerfilForm(forms.ModelForm):
     class Meta:
         model = Perfil
         fields = ['foto', 'ocupacao', 'genero', 'telefone',
-                  'cidade','estado', 'descricao']
+                    'cidade','estado', 'descricao']
 
     def __init__(self, *args, **kwargs):
         self.user = kwargs.pop('user', None)
@@ -116,31 +114,34 @@ Vamos atualizar os botão para redirecionar para formulário.
 apps/perfil/templates/perfil.html
 
 ```python
-<a class="btn btn-warning" href="{% url 'editar-perfil' obj.username %}" role="button">
-    <i class="fas fa-cog"></i> Editar Perfil
-</a>
+    {% if request.user == obj.perfil.usuario or request.user.is_superuser %}
+    <a class="btn btn-warning" href="{% url 'editar-perfil' obj.username %}" role="button">
+        <i class="fas fa-cog"></i> Editar Perfil
+    </a>
+    {% endif %}
 ```
 
 apps/contas/templates/lista-usuario.html
 
 ```html
 <td scope="row">
-	<a class="link-warning" href="{% url 'perfil' usuario.username %}"><i class="fas fa-eye mx-2"></i></a>
-	<a class="ml-2 link-secondary" href="{% url 'editar-perfil' usuario.username %}"><i class="far fa-file mx-2"></i></a>
-	<a class="ml-3 link-danger" href=""><i class="fas fa-trash mx-2"></i></a>
+    <a class="link-warning" href="{% url 'perfil' usuario.username %}"><i class="fas fa-eye mx-2"></i></a>
+    <a class="ml-2 link-secondary" href="{% url 'editar-perfil' usuario.username %}"><i class="far fa-file mx-2"></i></a>
+    <a class="ml-3 link-danger" href=""><i class="fas fa-trash mx-2"></i></a>
 </td>
 ```
 
 Configurações do Dashboard podemos adicionar uns atalhos.
 
 apps/config/templates/configuracao.html
+
 ```python
 <ul>
-	  <li><a href="{% url 'atualizar_usuario' request.user.username %}">Alterar Configurações da Conta</a></li>
-	  <li><a href="{% url 'password_change' %}">Alterar minha senha</a></li>
-	  <li><a href="{% url 'editar-perfil' request.user.username %}">Editar meu Perfil</a></li> 
-	  {% if perms.contas.view_myuser %}
-	  <li><a href="{% url 'lista_usuarios' %}">Lista Todos usuários</a></li>
-	  {% endif %} 
+        <li><a href="{% url 'atualizar_usuario' request.user.username %}">Alterar Configurações da Conta</a></li>
+        <li><a href="{% url 'password_change' %}">Alterar minha senha</a></li>
+        <li><a href="{% url 'editar-perfil' request.user.username %}">Editar meu Perfil</a></li> 
+        {% if perms.contas.view_myuser %}
+        <li><a href="{% url 'lista_usuarios' %}">Lista Todos usuários</a></li>
+        {% endif %} 
 </ul>
 ```

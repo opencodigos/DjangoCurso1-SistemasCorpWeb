@@ -1,6 +1,4 @@
-# **Autenticação Customizada**
-
-Dev: Letícia Lima
+## **Autenticação Customizada**
 
 Para implementar um modelo de autenticação com diferentes níveis de acesso, vamos utilizar as permissões de acesso do Django. Para isso, criaremos três tipos de usuário:
 
@@ -16,9 +14,9 @@ Em seguida, criaremos os grupos e associaremos as permissões a cada grupo, de a
 
 Por fim, vamos definir as visualizações que exigem autenticação e permissões específicas. Para isso, utilizaremos o decorador **`permission_required`** do Django, que permite verificar se o usuário possui as permissões necessárias para acessar a visualização.  
 
-com base na documentação abaixo vamos deixar um modelo completo para futuras customizações. Vamos utilizar exatamente como está ai
+Com base na documentação abaixo vamos deixar um modelo completo para futuras customizações. Vamos utilizar exatamente como está ai
 
-Documentação: https://docs.djangoproject.com/en/4.2/topics/auth/customizing/#custom-users-admin-full-example
+**Documentação:** https://docs.djangoproject.com/en/5.1/topics/auth/customizing/#custom-users-admin-full-example 
 
 Criar um app chamado “**contas**” colocar a pasta dentro de “**apps**” onde definimos no inicio que ficariam nossos aplicativos.
 
@@ -29,10 +27,10 @@ python manage.py startapp contas
 Adiciona no core/settings.py
 
 ```python
-PROJECT_APPS = [
-    'apps.base',
-    'apps.contas',
-    'apps.home',
+PROJECT_APPS = [ # são os apps que criamos no projeto 
+    'apps.base', 
+    'apps.pages', 
+    'apps.contas', 
 ]
 ```
 
@@ -49,17 +47,17 @@ class MyUserManager(BaseUserManager):
         if not email:
             raise ValueError('Users must have an email address')
         user = self.model(email=self.normalize_email(email), **kwargs)
-        user.set_password(password)
-        user.save()
+        user.set_password(password)  # Hash a senha
+        user.save(using=self._db)  # Usa o banco de dados correto
         return user
 
-    def create_superuser(self, email, password, **kwargs):
+    def create_superuser(self, email, password=None, **kwargs):
         kwargs.setdefault('is_staff', True)
         kwargs.setdefault('is_superuser', True)
         return self.create_user(email, password, **kwargs)
 
 class MyUser(AbstractBaseUser, PermissionsMixin):
-    email = models.EmailField(unique=True,max_length=255)
+    email = models.EmailField(unique=True, max_length=255)
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
     is_active = models.BooleanField(default=True)
@@ -67,8 +65,7 @@ class MyUser(AbstractBaseUser, PermissionsMixin):
     date_joined = models.DateTimeField('date joined', auto_now_add=True)
     
     USERNAME_FIELD = 'email'
-    EMAIL_FIELD = 'email'
-    REQUIRED_FIELDS = ['first_name', 'last_name']
+    REQUIRED_FIELDS = ['first_name', 'last_name']  # Campos obrigatórios para criar um superusuário
 
     objects = MyUserManager()
 
@@ -79,19 +76,17 @@ class MyUser(AbstractBaseUser, PermissionsMixin):
         return f'{self.first_name} {self.last_name}'
 
     def get_short_name(self):
-        return self.first_name
+        return self.first_name 
 ```
 
 apps/contas/admin.py
 
 ```python
 from django.contrib import admin
-from django.contrib.auth.admin import UserAdmin
-from contas.forms import UserCreationForm
+from django.contrib.auth.admin import UserAdmin 
 from contas.models import MyUser
 
-class MyUserAdmin(UserAdmin):
-    add_form = UserCreationForm
+class MyUserAdmin(UserAdmin): 
     model = MyUser
     list_display = ('email', 'first_name', 'last_name', 'is_active', 'is_staff')
     list_filter = ('is_active', 'is_staff')
@@ -117,9 +112,7 @@ admin.site.register(MyUser, MyUserAdmin)
 core/settings.py
 
 ```python
-...
-AUTH_USER_MODEL = "contas.MyUser"
-...
+AUTH_USER_MODEL = "contas.MyUser" 
 ```
 
 Admin do Django. Já podemos criar os grupos.

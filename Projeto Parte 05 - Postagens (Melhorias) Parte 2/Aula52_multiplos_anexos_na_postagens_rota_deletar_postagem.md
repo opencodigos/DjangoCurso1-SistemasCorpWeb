@@ -2,7 +2,7 @@
 
 Dev: Letícia Lima
 
-### Deletar Imagem do Anexo
+### Deletar Imagem do Anexo 
 
 Vamos usar Ajax para fazer isso, Eu não queria usar ajax ainda nesse inicio, masss !!! seria interessante vocês ve como pode ser simples usar ajax e deixar as coisas mais dinamicas. Basicamente vamos criar uma função que só remove a imagem ( Anexo ) com base no parametro que vamos requisitar.
 
@@ -10,14 +10,14 @@ apps/forum/views.py
 
 ```python
 def remover_imagem(request):
-    imagem_id = request.GET.get('imagem_id') # Id da imagem
-    verifica_imagem = models.PostagemForumImage.objects.filter(id=imagem_id) # Filtra pra ver se imagem existe...
-    if verifica_imagem:
-        postagem_imagem = models.PostagemForumImage.objects.get(id=imagem_id) # pega a imagem
-        # Excluir a imagem do banco de dados e do sistema de arquivos (pasta postagem-forum/)
-        postagem_imagem.imagem.delete()
-        postagem_imagem.delete()
-    return JsonResponse({'message': 'Imagem removida com sucesso.'})
+	imagem_id = request.GET.get('imagem_id') # Id da imagem
+	verifica_imagem = models.PostagemForumImagem.objects.filter(id=imagem_id) # Filtra pra ver se imagem existe...
+	if verifica_imagem:
+		postagem_imagem = models.PostagemForumImagem.objects.get(id=imagem_id) # pega a imagem
+		# Excluir a imagem do banco de dados e do sistema de arquivos (pasta postagem-forum/)
+		postagem_imagem.imagem.delete()
+		postagem_imagem.delete()
+	return JsonResponse({'message': 'Imagem removida com sucesso.'})
 ```
 
 apps/forum/urls.py
@@ -44,11 +44,13 @@ apps/forum/template/modal-form-postagem-forum.html
 </div>
 ```
 
-`**div-imagem` Tenho um bloco representa a imagem completa.**
+**`div-imagem` Tenho um bloco representa a imagem completa.**
 
-`**remover-imagem` Class apenas para usar no ajax no Click**
+**`remover-imagem` Class apenas para usar no ajax no Click**
 
 **`data-imagem-id` É o atributo que ta recebendo um valor no caso o id da imagem.**
+
+apps/forum/template/modal-form-postagem-forum.html
 
 ```jsx
 <script src="https://code.jquery.com/jquery-3.6.4.min.js" integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>

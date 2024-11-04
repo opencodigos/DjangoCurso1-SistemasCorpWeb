@@ -1,12 +1,14 @@
 # **Rota Detalhe Postagem**
 
-**Dev: Letícia Lima**
+**Dev: Letícia Lima** 
 
 Para ver os detalhes da postagem vamos adicionar uma função na view que vai receber um id da postagem e mostrar os dados.
 
 apps/forum/views.py
 
 ```python
+from django.shortcuts import get_object_or_404
+
 def detalhe_postagem_forum(request, id):
     postagem = get_object_or_404(models.PostagemForum, id=id)
     return render(request, 'detalhe-postagem-forum.html', {'postagem': postagem})
@@ -55,6 +57,7 @@ apps/forum/templates/detalhe-postagem-forum.html
 Já temos a rota de visualizar uma postagem. Portando podemos adicionar a url de redirecionamento no link dos card que fica na lista de postagens.
 
 apps/forum/templates/lista-postagem-forum.html
+
 ```python
 <h5><a href="{% url 'detalhe-postagem-forum' postagem.id %}">{{postagem.titulo}}</a></h5>
 ```

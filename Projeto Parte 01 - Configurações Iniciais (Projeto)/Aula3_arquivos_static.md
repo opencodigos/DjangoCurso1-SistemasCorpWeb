@@ -1,18 +1,21 @@
 ***Arquivos STATIC***
 
 **Dev: Letícia Lima**
-
- ****
+ 
+**Vamos configurar nossos arquivos** *static*
 
 ```python
 import os 
 
-# base_dir config
+# Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
 TEMPLATE_DIR = os.path.join(BASE_DIR,'templates')
-STATIC_DIR=os.path.join(BASE_DIR,'static')
+
+STATIC_DIR=os.path.join(BASE_DIR,'static') 
 
 # Database
+# https://docs.djangoproject.com/en/5.1/ref/settings/#databases 
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -20,6 +23,8 @@ DATABASES = {
     }
 }
 
+# Static files (CSS, JavaScript, Images)
+# https://docs.djangoproject.com/en/5.1/howto/static-files/ 
 STATIC_ROOT = os.path.join(BASE_DIR,'static')
 STATIC_URL = '/static/' 
 
@@ -28,9 +33,10 @@ STATIC_URL = '/static/'
 # ]
 
 MEDIA_ROOT=os.path.join(BASE_DIR,'media')
-MEDIA_URL = '/media/'
+MEDIA_URL = '/media
 
 # Internationalization
+# https://docs.djangoproject.com/en/5.1/topics/i18n/ 
 # Se quiser deixar em PT BR
 LANGUAGE_CODE = 'pt-br'
 
@@ -57,6 +63,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
 ]
 
-urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
-urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+if settings.DEBUG: # update 03/11/2024: (em homologa com debug true adiciona rota static)
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 ```

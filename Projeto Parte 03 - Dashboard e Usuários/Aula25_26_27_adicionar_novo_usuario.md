@@ -1,4 +1,4 @@
-# **Adicionar novo usuário**
+# **Adicionar novo usuário**  
 
 Através do dashboard se um usuário administrador quiser adicionar um novo usuario no sistema. Vamos criar um formuário completo. 
 
@@ -20,7 +20,7 @@ class PerfilForm(forms.ModelForm):
     class Meta:
         model = Perfil
         fields = ['foto', 'ocupacao', 'genero', 'telefone',
-                  'cidade','estado', 'descricao']
+                    'cidade','estado', 'descricao']
 
     def __init__(self, *args, **kwargs):
         self.user = kwargs.pop('user', None)
@@ -35,6 +35,8 @@ class PerfilForm(forms.ModelForm):
 apps/contas/views.py 
 
 ```python
+from perfil.forms import PerfilForm
+
 @login_required
 @grupo_colaborador_required(['administrador','colaborador'])
 def adicionar_usuario(request):
@@ -53,7 +55,7 @@ def adicionar_usuario(request):
             perfil = perfil_form.save(commit=False)
             perfil.usuario = usuario
             perfil.save()
- 
+    
             messages.success(request, 'Usuário adicionado com sucesso.')
             return redirect('lista_usuarios')
 
@@ -71,7 +73,7 @@ apps/contas/templates/lista-usuarios.html
 
 ```python
 <button class="btn btn-secondary" onclick="window.location.href='{% url 'adicionar_usuario' %}'">
-			<i class="fas fa-user mx-2"></i> Adicionar Novo</button>
+            <i class="fas fa-user mx-2"></i> Adicionar Novo</button>
 ```
 
 apps/contas/templates/adicionar-usuario.html
@@ -85,7 +87,7 @@ apps/contas/templates/adicionar-usuario.html
         {% csrf_token %}
         <h4>Dados Conta Usuário (Principal)</h4>
         {{ user_form }}
-	      {{ perfil_form }}
+            {{ perfil_form }}
         <div class="mt-3">
             <button class="btn btn-primary mt-3" type="submit">Criar</button>
         </div>  
@@ -170,28 +172,51 @@ Somente quando usuario estiver autenticado queremos que campo senha não apareç
 
 ```python
 class CustomUserCreationForm(forms.ModelForm):
-	...
+    password1 = forms.CharField(label="Senha", widget=forms.PasswordInput) 
+    password2 = forms.CharField(label="Confirmar Senha", widget=forms.PasswordInput)
 
-	def __init__(self, *args, **kwargs):
-	  self.user = kwargs.pop('user', None)
-	 ...
-	  if self.user.is_authenticated:
-	      del self.fields['password1']
-	      del self.fields['password2']
-	
-	
-	def save(self, commit=True):
-	  # Save the provided password in hashed format
-	  user = super().save(commit=False)
-	  if self.user.is_authenticated:
-	      user.set_password('123') # Senha padrão 123 para todos usuarios adicionados
-	      user.force_change_password = True # força mudança de senha quando logar.
-	  else:
-	      user.set_password(self.cleaned_data["password1"])
-	  if commit:
-	      user.save()
-	  return user
-	
+    class Meta:
+        model = MyUser
+        fields = ('email', 'first_name', 'last_name', 'password1', 'password2')
+        labels = {
+            'email': 'Email', 
+            'first_name': 'Nome', 
+            'last_name': 'Sobrenome', 
+            'is_active': 'Usúario Ativo?'
+        }
+
+    def __init__(self, *args, **kwargs):
+        self.user = kwargs.pop('user', None)
+        super(CustomUserCreationForm, self).__init__(*args, **kwargs)
+        for field_name, field in self.fields.items():
+            if field.widget.__class__ in [forms.CheckboxInput, forms.RadioSelect]:
+                field.widget.attrs['class'] = 'form-check-input'
+            else:
+                field.widget.attrs['class'] = 'form-control'
+        
+        if self.user.is_authenticated:
+            del self.fields['password1']
+            del self.fields['password2']
+        
+    def clean_password2(self):
+        # Check that the two password entries match
+        password1 = self.cleaned_data.get("password1")
+        password2 = self.cleaned_data.get("password2")
+        if password1 and password2 and password1 != password2:
+            raise ValidationError("Senha não estão iguais!")
+        return password2
+
+    def save(self, commit=True):
+        # Save the provided password in hashed format
+        user = super().save(commit=False)
+        if self.user.is_authenticated:
+            user.set_password('123') # Senha padrão 123 para todos usuarios adicionados
+            user.force_change_password = True # força mudança de senha quando logar.
+        else:
+            user.set_password(self.cleaned_data["password1"])
+        if commit:
+            user.save()
+        return user
 ```
 
 Lembrando que na views precisamos adicionar o parametro “user” para poder chamar no forms.
@@ -201,8 +226,8 @@ Adicione: `user=request.user` Assim no forms conseguimos pegar a instancia do us
 ```python
 # Adicionei aqui, todas as variaveis que tem Form.
 def adicionar_usuario(request):
-	user_form = CustomUserCreationForm(user=request.user)
-	perfil_form = PerfilForm(user=request.user)
+    user_form = CustomUserCreationForm(user=request.user)
+    perfil_form = PerfilForm(user=request.user)
 
 # Adicionei na view register tambem por que usamos a mesma class para formulário.
 def register_view(request): 
@@ -210,7 +235,63 @@ def register_view(request):
         form = CustomUserCreationForm(request.POST, user=request.user)
 ```
 
-Agora vamos adicionar um campo no nosso modelo myUser. E adicionei essa função para pegar o valor da instancia desse campo. Rode o makemigrations e migrate para adicionar esse campo na tabela.
+**Configuração completa da views**
+
+apps/contas/views.py
+
+```python
+# Registrar um usuário
+def register_view(request):
+    if request.method == "POST": # metodo POST
+        form = CustomUserCreationForm(request.POST, user=request.user) # Formulário que criamos no forms.py
+        if form.is_valid(): # se formulário for valido registra usuário
+            usuario = form.save(commit=False)
+            usuario.is_valid = False
+            usuario.save()
+
+            group = Group.objects.get(name='usuario')
+            usuario.groups.add(group)
+            
+            Perfil.objects.create(usuario=usuario) # Cria instancia perfil do usuário
+            
+            messages.success(request, 'Registrado. Agora faça o login para começar!')
+            
+            return redirect('login') # Redireciona para login
+        else:
+            # Tratar quando usuario já existe, senhas... etc...
+            messages.error(request, 'A senha deve ter pelo menos 1 caractere maiúsculo, \
+                1 caractere especial e no minimo 8 caracteres.')
+    form = CustomUserCreationForm(user=request.user) # Inicialmente carrega o formulário no template, os campos etc..
+    return render(request, "register.html",{"form": form})
+
+# Adicionar usuário no sistema, somente admin e colab podem cadastrar.
+@login_required
+@grupo_colaborador_required(['administrador','colaborador'])
+def adicionar_usuario(request):
+    user_form = CustomUserCreationForm(user=request.user)
+    perfil_form = PerfilForm(user=request.user)
+
+    if request.method == 'POST':
+        user_form = CustomUserCreationForm(request.POST, user=request.user)
+        perfil_form = PerfilForm(request.POST, request.FILES, user=request.user)
+
+        if user_form.is_valid() and perfil_form.is_valid():
+            # Salve o usuário
+            usuario = user_form.save()
+
+            # Crie um novo perfil para o usuário
+            perfil = perfil_form.save(commit=False)
+            perfil.usuario = usuario
+            perfil.save()
+    
+            messages.success(request, 'Usuário adicionado com sucesso.')
+            return redirect('lista_usuarios')
+
+    context = {'user_form': user_form, 'perfil_form': perfil_form}
+    return render(request, "adicionar-usuario.html", context)
+```
+
+Agora vamos adicionar um campo no nosso modelo **myUser**. E adicionei essa função para pegar o valor da instancia desse campo. Rode o makemigrations e migrate para adicionar esse campo na tabela.
 
 ```python
 # apps/contas/models.py
@@ -224,29 +305,36 @@ Vamos adicionar uma regra no login. Por que no login que vai verificar se é a p
 
 ```python
 def login_view(request):
-	...
-	if user is not None:
-	  login(request, user)
-	  
-	  if user.is_authenticated and user.requires_password_change(): # Verifica
-	      msg = 'Olá '+user.first_name+', como você pode perceber atualmente \
-	              a sua senha é 123 cadastrado. Recomendamos fortemente \
-	              que você altere sua senha para garantir a segurança da sua conta. \
-	              É importante escolher uma senha forte e única que não seja fácil de adivinhar. \
-	              Obrigado pela sua atenção!' 
-	      messages.warning(request, msg)
-	      return redirect('force_password_change') # Vai para rota de alterar senha.
-	  else:
-	      return redirect('home')
-	
-	else:
-	  messages.error(request, 'Email ou senha inválidos')
-	...
+    if request.method == 'POST': # metodo POST
+        email = request.POST.get('email') # Valor do campo email
+        password = request.POST.get('password') # Valor do campo password 
+        user = authenticate(request, email=email, password=password) # Retorna a autenticação
+        
+        if user is not None:
+            login(request, user)
+            
+            if user.is_authenticated and user.requires_password_change(): # Verifica
+                msg = 'Olá '+user.first_name+', como você pode perceber atualmente \
+                        a sua senha é 123 cadastrado. Recomendamos fortemente \
+                        que você altere sua senha para garantir a segurança da sua conta. \
+                        É importante escolher uma senha forte e única que não seja fácil de adivinhar. \
+                        Obrigado pela sua atenção!' 
+                messages.warning(request, msg)
+                return redirect('force_password_change') # Vai para rota de alterar senha.
+            else:
+                return redirect('home')  
+        else:
+            messages.error(request, 'Email ou senha inválidos') # senão, retorna mensagem de erro
+    
+    if request.user.is_authenticated: # se usuario acessar a rota /login, já estiver autenticado retorna para home
+        return redirect('home')
+    return render(request, 'login.html')
+
 ```
 
 **Precisamos criar a rota que força a mudança de senha para usar o sistema.**
 
-https://docs.djangoproject.com/en/4.2/topics/auth/default/#django.contrib.auth.update_session_auth_hash
+https://docs.djangoproject.com/pt-br/5.1/topics/auth/default/#session-invalidation-on-password-change
 
 apps/contas/views.py
 
@@ -285,7 +373,7 @@ apps/contas/templates/registration/password_force_change_form.html
 <div class="row p-5 bg-light">
     <h3>Entre com sua nova senha</h3>
     {% include "registration/change_form.html" %}
- </div>
+    </div>
 {% endblock %}
 ```
 
@@ -293,6 +381,12 @@ apps/contas/urls.py
 
 ```python
 path('nova-senha/', views.force_password_change_view, name='force_password_change'),
+```
+
+Não esquece de rodar as migrações
+
+```python
+python manage.py makemigrations  && python manage.py migrate
 ```
 
 Agora é só testar.

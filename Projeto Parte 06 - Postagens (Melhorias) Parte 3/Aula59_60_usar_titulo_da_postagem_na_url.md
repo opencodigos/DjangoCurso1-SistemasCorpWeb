@@ -1,12 +1,12 @@
 # **Usar titulo da postagem na URL**
 
-**Dev: Letícia Lima**
-
+**Dev: Letícia Lima** 
+    
 Como vocês perceberam estamos passando o **ID na URL** para fazer os eventos que precisamos. Seria interessante passar uma string como titulo por exemplo.
 
 Para fazer isso no modelo precisamos fazer algumas modificações. Vamos adicionar um slug unique. Para não existir titulo igual, assim não ocorre conflitos. E no **save()** podemos tratar assim.
 
-https://docs.djangoproject.com/en/4.2/ref/models/fields/
+https://docs.djangoproject.com/pt-br/5.1/ref/models/fields/
 
 apps/forum/models.py
 
@@ -33,11 +33,15 @@ import random
 import string
 
 def save(self, *args, **kwargs):
-	if not self.slug:  # Executa apenas se o campo 'slug' estiver vazio
-	    slug_base = slugify(self.titulo)  # Gera o slug com base no título
-	    random_string = ''.join(random.choices(string.ascii_lowercase + string.digits, k=5))  # Gera uma string aleatória de 5 caracteres
-	    self.slug = f"{slug_base}-{random_string}"  # Adiciona a string aleatória ao slug base
-	super().save(*args, **kwargs)
+    if not self.slug:  # Executa apenas se o campo 'slug' estiver vazio
+        slug_base = slugify(self.titulo)  # Gera o slug com base no título
+        random_string = ''.join(random.choices(string.ascii_lowercase + string.digits, k=5))  # Gera uma string aleatória de 5 caracteres
+        self.slug = f"{slug_base}-{random_string}"  # Adiciona a string aleatória ao slug base
+    super().save(*args, **kwargs)
+```
+
+```python
+python manage.py makemigrations && python manage.py migrate
 ```
 
 Depois de rodar o makemigrations e migrate. Vamos precisar mudar nossas views relacionadas com postagens. Então fiquem atentos aos apps forum e perfil. **E vamos atualizar o template onde passamos o parametro ID que agora será slug e views que recebe ID da postagem agora será slug.**
@@ -48,14 +52,14 @@ apps/forum/views.py
 # Detalhes postagem
 def detalhe_postagem_forum(request, slug):
     postagem = get_object_or_404(models.PostagemForum, slug=slug)
-		...
+        ...
 
 # Editar Postagem
 @login_required 
 def editar_postagem_forum(request,slug):
     redirect_route = request.POST.get('redirect_route', '')
     postagem = get_object_or_404(models.PostagemForum, slug=slug)
-		...
+        ...
 
 # Deletar Postagem
 @login_required 
@@ -63,7 +67,7 @@ def deletar_postagem_forum(request, slug):
     redirect_route = request.POST.get('redirect_route', '')
     print(redirect_route)
     postagem = get_object_or_404(models.PostagemForum, slug=slug)
-		...
+        ...
 
 ```
 
@@ -121,7 +125,7 @@ Faço isso. Adiciona **`readonly_filed`** e coloca slug.
 ```python
 class PostagemForumAdmin(admin.ModelAdmin):
     inlines = [
-        PostagemForumImageInline,
+        PostagemForumImagemInline,
     ]
     readonly_fields = ('slug',)
 ```

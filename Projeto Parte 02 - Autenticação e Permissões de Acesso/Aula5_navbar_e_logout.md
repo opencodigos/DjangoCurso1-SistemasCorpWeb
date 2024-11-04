@@ -1,6 +1,6 @@
 # **Navbar e Logout**
 
-**Dev: Letícia Lima**
+**Dev: Letícia Lima** 
 
 Vamos configrar a navbar e os botões de **login/logout.** E aplicar algumas regras. Assim começamos a dar vida no sistema.
 
@@ -46,10 +46,10 @@ apps/base/templates/base.html
 
 ```html
 <body>
-	... 
-	{% include 'components/navbar.html' %} 
-	{% block content %}{% endblock %} 
-	...
+    ... 
+    {% include 'components/navbar.html' %} 
+    {% block content %}{% endblock %} 
+    ...
 </body>
 ```
 
@@ -64,15 +64,15 @@ A tag `onclick="location.href='{% url 'name' %}’` onde tem ‘name’ a gente 
 ```html
 ...
 <form class="d-flex" role="search">
-	<input class="form-control me-2" type="search" placeholder="Pesquisar" aria-label="Search">
-	<button class="btn btn-secondary" type="submit"><i class="fas fa-search"></i></button>
+    <input class="form-control me-2" type="search" placeholder="Pesquisar" aria-label="Search">
+    <button class="btn btn-secondary" type="submit"><i class="fas fa-search"></i></button>
 </form>
 <button class="btn btn-primary mx-2" onclick="location.href='{% url 'login' %}'">Entrar</button>
 <button class="btn btn-warning" onclick="location.href='{% url 'register' %}'">Cadastrar-se</button>
 ...
 ```
 
-com base nisso vamos criar uma regra no template para quando usuario autentificado aparece um botão de logout. Mas antes precisamos criar a rota de logout.
+Com base nisso vamos criar uma regra no template para quando usuario autentificado aparece um botão de logout. Mas antes precisamos criar a rota de logout.
 
 apps/contas/
 
@@ -90,7 +90,7 @@ path('sair/', views.logout_view, name='logout'),
 <button class="btn btn-danger" onclick="location.href='{% url 'logout' %}'">Logout</button>
 ```
 
-Pode ver essa documentação sobre: https://docs.djangoproject.com/en/4.2/topics/auth/default/#all-authentication-views
+Pode ver essa documentação sobre: https://docs.djangoproject.com/pt-br/5.1/topics/auth/default/#all-authentication-views
 
 atualizando o template apps/base/templates/components/navbar.html
 
@@ -106,28 +106,30 @@ atualizando o template apps/base/templates/components/navbar.html
 ...
 ```
 
+## Pop-up de confirmação para Sair
+
 Vamos adicionar um popup para perguntar para usuário se ele gostaria de sair do sistema. Para isso vamos adicionar um novo componente chamado logout.
 
 apps/base/templates/components/logout.html
 
 ```python
 <div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="logoutModalLabel" aria-hidden="true">
-	<div class="modal-dialog modal-dialog-centered">
-		<div class="modal-content">
-			<div class="modal-header">
-				<h5 class="modal-title" id="logoutModalLabel">Atenção Usuario ! <i
-						class="link-danger fas fa-exclamation-triangle me-2"></i></h5>
-				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-			</div>
-			<div class="modal-body">
-				Tem certeza que deseja sair do sistema ? <br>
-				Após clicar em "Sair" você será deslogado.
-			</div>
-			<div class="modal-footer">
-				<button class="btn btn-danger" onclick="location.href='{% url 'logout' %}'"><a>Sair</a></button>
-			</div>
-		</div>
-	</div>
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="logoutModalLabel">Atenção Usuario ! <i
+                        class="link-danger fas fa-exclamation-triangle me-2"></i></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Tem certeza que deseja sair do sistema ? <br>
+                Após clicar em "Sair" você será deslogado.
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-danger" onclick="location.href='{% url 'logout' %}'"><a>Sair</a></button>
+            </div>
+        </div>
+    </div>
 </div>
 ```
 
@@ -138,6 +140,7 @@ apps/base/templates/components/navbar.html
 ```
 
 apps/base/templates/base.html
+
 ```python
 {% include 'components/logout.html' %}
 ```

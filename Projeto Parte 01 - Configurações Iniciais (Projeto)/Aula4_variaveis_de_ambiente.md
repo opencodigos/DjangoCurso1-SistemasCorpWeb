@@ -1,6 +1,6 @@
 ***Variáveis de Ambiente***
 
-**Dev: Letícia Lima**
+**Dev: Letícia Lima**  
 
 Para configurar variáveis de ambiente vamos utilizar biblioteca ***python-dotenv.*** Existem outras concorrentes, mas **eu gosto de usar o python-dotenv**. 
 
@@ -56,7 +56,7 @@ SERVER_EMAIL=DEFAULT_FROM_EMAIL
 
 Sempre envio um arquivo exemplo **(sem as informações reais)** como esse exemplo “**_env**” no *commit*. Assim quando eu abaixo o repositório eu preencho somente as informações e renomeio o arquivo para “.**env**”. Lembrando o arquivo “.**env**” não vai nos *commits*. Essa informação deve estar no .*gitignore*. Caso for um servidor real ai você cria esse arquivo no servidor. 
 
-**Mas antes vamos comentar sobre a estrutura de pastas.** 
+## **Mas antes vamos comentar sobre a estrutura de pastas.**
 
 Eu costumo fazer assim, para todos os apps que a gente criar no django eu coloco em uma pasta “apps”. Só que a gente precisa dizer isso no projeto para procurar nossos aplicativos na pasta “apps”. Então já vou deixar configurado aqui no core/settings.py. Junto com as outras configurações.
 
@@ -88,7 +88,7 @@ projeto/
 └── requirements.txt
 ```
 
-**Configuração no core/settings.py**
+## **Configuração no core/settings.py**
 
 Nota que para chamar uma variavel no arquivo .env basta chamar a biblioteca **os.getenv**('NAME_DB') e **NAME_DB** é nome da variavel que está no arquivo.
 
@@ -96,23 +96,25 @@ Nota que para chamar uma variavel no arquivo .env basta chamar a biblioteca **os
 # importar a biblioteca
 import os
 import sys
-from dotenv import load_dotenv
+from dotenv import load_dotenv 
 
 # Adicionar essa tag para que nosso projeto encontre o .env
-load_dotenv(os.path.join(BASE_DIR, ".env"))
+load_dotenv(os.path.join(BASE_DIR, ".env")) 
 
-# Diz para Django onde estão nossos aplicativos
-APPS_DIR = str(os.path.join(BASE_DIR,'apps'))
+# Diz para Projeto Django aonde estão nossos aplicativos
+APPS_DIR = str(os.path.join(BASE_DIR,'apps')) # Dentro da pasta apps na raiz do projeto
 sys.path.insert(0, APPS_DIR)
 
 # Chamar as variaveis assim
+
+# SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.getenv("SECRET_KEY")
 
-# DEBUG
+# SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DEBUG')
 
-# Aplicativos do django
-DJANGO_APPS = [
+# Application definition 
+DJANGO_APPS = [ # Aplicativos padrão do projeto django
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -120,29 +122,33 @@ DJANGO_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 ]
-THIRD_APPS = [
-    ...
+    
+THIRD_APPS = [ # são as Lib/app que instalamos no projeto
+    #... # update 11/03/2024 - removido esses ...
 ]
-PROJECT_APPS = [
-    'apps.base',
-    'apps.myapp',
+
+PROJECT_APPS = [ # são os apps que criamos no projeto 
+        # 'apps.base',		# update 11/03/2024
+        # 'apps.myapp',   # Removido esses apps que nao criamos ainda.
 ]
+
+# INSTALLED_APPS é a variavel que django entende para fazer a leitura \
+# dos aplicativos então verifica a nomencratura.
 INSTALLED_APPS = DJANGO_APPS + THIRD_APPS + PROJECT_APPS
 
 # Banco de Dados.
 DATABASES = {
-  'default': {
-      'ENGINE': 'django.db.backends.sqlite3',
-      'NAME': os.path.join(BASE_DIR, os.getenv('NAME_DB')),
-			#'USER':os.getenv('USER_DB')
-			#'PASSWORD': os.getenv('PASSWORD_DB')
-			#'HOST':os.getenv('HOST_DB')
-			#'PORT':os.getenv('PORT_DB')
-
-	}
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, os.getenv('NAME_DB')),
+            #'USER':os.getenv('USER_DB')
+            #'PASSWORD': os.getenv('PASSWORD_DB')
+            #'HOST':os.getenv('HOST_DB')
+            #'PORT':os.getenv('PORT_DB') 
+    }
 }
 
-# Se tiver configuração de email
+# Configuração de E-mail
 EMAIL_HOST = os.getenv('EMAIL_HOST')
 EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD') 

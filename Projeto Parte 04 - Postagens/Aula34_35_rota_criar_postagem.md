@@ -1,6 +1,6 @@
 # **Rota Criar Postagem**
 
-**Dev: Letícia Lima**
+**Dev: Letícia Lima** 
 
 Eu geralmente tenho o costume de tratar qualquer tipo de formulário com django usando o forms. 
 
@@ -31,7 +31,7 @@ class PostagemForumForm(forms.ModelForm):
                 field.widget.attrs['class'] = 'form-control'
 ```
 
-Na views vamos adicionar uma função para criar essas postagens. Nessa view se metodo é post ele pega o nosso `**PostagemForumForm**` que criamos no forms.py e verifica todas as validações que fizemos. Se tudo ok, salva e redireciona para lista de postagens no homepage *(Por enquanto, depois vamos adicionar essa lista no dashboard)*
+Na views vamos adicionar uma função para criar essas postagens. Nessa view se metodo é post ele pega o nosso **`PostagemForumForm`** que criamos no forms.py e verifica todas as validações que fizemos. Se tudo ok, salva e redireciona para lista de postagens no homepage *(Por enquanto, depois vamos adicionar essa lista no dashboard)*
 apps/forum/views.py
 
 ```python
@@ -39,6 +39,7 @@ from django.shortcuts import render, redirect
 from forum.forms import PostagemForumForm
 from django.contrib import messages  
 
+# Cria postagens 
 def criar_postagem_forum(request):
     form = PostagemForumForm()
     if request.method == 'POST':
@@ -63,7 +64,7 @@ urlpatterns = [
 ]
 ```
 
-Nosso template fica assim. Esse `**{{form}}**` contem todos os campos do nosso formulário que tratamos em forms. O **`as_p adiciona o <p>`**. Como podem percebe estamos herdando de **`base_dashboard.html`**
+Nosso template fica assim. Esse **`{{form}}`** contem todos os campos do nosso formulário que tratamos em forms. O **`as_p adiciona o <p>`**. Como podem percebe estamos herdando de **`base_dashboard.html`**
 
 apps/forum/templates/form-postagem-forum.html
 
@@ -73,8 +74,7 @@ apps/forum/templates/form-postagem-forum.html
 {% block content_dash %}
 <div class="row"> 
     <div class="col-md-8">
-        <form class="p-3 rounded-3 shadow-sm" method="post" 
-							enctype="multipart/form-data">
+        <form class="p-3 rounded-3 shadow-sm" method="post" enctype="multipart/form-data">
             {% csrf_token %}
             <h4>Criar Postagem</h4>
             {{ form.as_p }}
@@ -91,8 +91,7 @@ apps/base/templates/components/navbar.html
 
 ```html
 {% if user.is_authenticated %}
-<button class="btn btn-success mx-2" 
-			onclick="location.href='{% url 'criar-postagem-forum' %}'">
+<button class="btn btn-success mx-2" onclick="location.href='{% url 'criar-postagem-forum' %}'">
     <i class="fas fa-plus"></i> Criar Postagem</button>
 ...
 ```
@@ -110,6 +109,7 @@ class PostagemForumForm(forms.ModelForm):
 ```
 
 Na **views.py** adicionamos o campo usuario para pegar o **request.user** automatico.
+
 ```
 def cadastrar_postagem(request):
     form = PostagemForumForm()

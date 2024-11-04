@@ -1,8 +1,8 @@
 # **Rota Editar Postagem**
 
-**Dev: Letícia Lima**
+**Dev: Letícia Lima** 
 
-Vamos criar um view para editar uma postagem. Lembrando que somente usuarios autenticados podem editar postagem. Por isso o decorador `**@login_required.**` Mesmo template que usamos para criar uma postagem, podemos usar para editar uma postagem. Até o `**PostagemForumForm**` é o mesmo. 
+Vamos criar um view para editar uma postagem. Lembrando que somente usuarios autenticados podem editar postagem. Por isso o decorador **`@login_required.`** Mesmo template que usamos para criar uma postagem, podemos usar para editar uma postagem. Até o **`PostagemForumForm`** é o mesmo. 
 
 <aside>
 ⚠️ **Vamos supor que você precisa tratar os campos de maneira diferente da rota de edição e criação. Ai nesse caso eu concordo em criar uma outra classe no forms. 
@@ -25,7 +25,7 @@ def editar_postagem_forum(request, id):
         form = PostagemForumForm(request.POST, instance=postagem)
         if form.is_valid():
             form.save()
-						messages.warning(request, 'Seu Post '+ postagem.titulo +' foi atualizado com sucesso!')
+                        messages.warning(request, 'Seu Post '+ postagem.titulo +' foi atualizado com sucesso!')
             return redirect('editar-postagem-forum', id=postagem.id)
     else:
         form = PostagemForumForm(instance=postagem)
@@ -62,9 +62,7 @@ E isso nao pode acontecer.
 
 ```python
 {% if postagem.usuario == request.user %}
-<a class="btn btn-warning" 
-				href="{% url 'editar-postagem-forum' postagem.id %}">
-		<i class="fas fa-edit"></i></a>  
+<a class="btn btn-warning" href="{% url 'editar-postagem-forum' postagem.id %}"><i class="fas fa-edit"></i></a>  
 <a class="btn btn-danger" href="#"><i class="fas fa-trash"></i></a>  
 {% endif %}
 ```
@@ -79,7 +77,7 @@ Então vamos reforçar isso na view. Colocando se o usuario for **administrador*
 # Verifica se o usuário autenticado é o autor da postagem
 if request.user != postagem.usuario and not (
         ['administrador', 'colaborador'] in request.user.groups.all() or request.user.is_superuser):
-	 return redirect('postagem-forum-list')  # Redireciona para uma página de erro ou outra página adequada
+        return redirect('postagem-forum-list')  # Redireciona para uma página de erro ou outra página adequada
 ```
 
 **Atualizamos a view assim:**
@@ -93,10 +91,8 @@ def editar_postagem_forum(request, id):
     
     # Verifica se o usuário autenticado é o autor da postagem
     if request.user != postagem.usuario and not (
-            ['administrador', 'colaborador'] in request.user.groups.all() 
-						or request.user.is_superuser):
-# Redireciona para uma página de erro ou outra página adequada
-            return redirect('postagem-forum-list')  
+            ['administrador', 'colaborador'] in request.user.groups.all() or request.user.is_superuser):
+            return redirect('postagem-forum-list')  # Redireciona para uma página de erro ou outra página adequada
     
     if request.method == 'POST':
         form = PostagemForumForm(request.POST, instance=postagem)

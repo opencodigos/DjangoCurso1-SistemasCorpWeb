@@ -1,7 +1,7 @@
 # **Rota de Atualizar Usuário**
 
-Dev: Letícia Lima
-
+Dev: Letícia Lima 
+    
 apps/contas/forms.py
 
 ```python
@@ -30,7 +30,9 @@ apps/contas/views.py
 
 ```python
 from django.contrib.auth.decorators import login_required
+from contas.forms import UserChangeForm
 
+# Atualizar usuario autenticado (meu usuario)
 @login_required()
 def atualizar_meu_usuario(request):
     if request.method == 'POST':
@@ -54,10 +56,10 @@ apps/contas/templates/user_update.html
     <h3>Atualizar Usuário</h3>
     <form method="post">
         {% csrf_token %}
-       {{form}}
-       <div class="mt-3">
+        {{form}}
+        <div class="mt-3">
             <button type="submit" class="btn btn-primary mt-3">Alterar</button> 
-       </div>
+        </div>
     </form>  
 </div>
 {% endblock %}
@@ -76,7 +78,9 @@ apps/contas/views.py
 ```python
 from django.shortcuts import get_object_or_404
 from contas.models import MyUser
+from contas.forms import UserChangeForm
 
+# Atualizar usuário passa um parametro ID de qualquer usuario
 @login_required()
 def atualizar_usuario(request, user_id):
     user = get_object_or_404(MyUser, pk=user_id)
@@ -92,6 +96,7 @@ def atualizar_usuario(request, user_id):
 ```
 
 apps/contas/urls.py
+
 ```python
-path('atualizar-usuario/<int:user_id>/', atualizar_usuario, name='atualizar_usuario'),
+path('atualizar-usuario/<int:user_id>/', views.atualizar_usuario, name='atualizar_usuario'),
 ```

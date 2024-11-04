@@ -1,6 +1,6 @@
 # **Gerar uma senha e enviar por e-mail**
 
-**Dev: Letícia Lima**
+**Dev: Letícia Lima** 
 
 Para gerar uma senha e enviar para usuario é muito simples. Com base nas instruções anteriores que fizemos basta fazer algumas alterações. Primeiro, que tipo de senha vamos enviar para usuário, eu pensei em 2 alternativas, um numero de 6 digitos aleatorio ou CPF.  Ai tanto faz, se for numero de CPF teriamos que criar um campo. Vamos fazer com um numero aleatorio e enviar para e-mail certo.
 
@@ -8,7 +8,7 @@ Vamos utilizar a bilbioteca nativa do Django para envio de e-mail. **EmailMessag
 
 Na documentação tem um exemplo que vamos seguir, podemos usar qualquer biblioteca dessa de envio de e-mail com django. 
 
-https://docs.djangoproject.com/en/4.1/topics/email/
+https://docs.djangoproject.com/pt-br/5.1/topics/email/
 
 apps/contas/forms.py
 
@@ -18,8 +18,8 @@ import string # contem todas as letras do alfabeto, etc.
 from django.core.mail import send_mail
 
 class CustomUserCreationForm(forms.ModelForm):
-			...
-			def save(self, commit=True):
+            ...
+            def save(self, commit=True):
         # Save the provided password in hashed format
         user = super().save(commit=False)
         if self.user.is_authenticated:
@@ -38,7 +38,7 @@ class CustomUserCreationForm(forms.ModelForm):
         if commit:
             user.save()
         return user
- 
+    
 ```
 
 Para usar numeros e letras na senha: `password = ''.join(random.choices(string.ascii_letters + string.digits, k=6))`

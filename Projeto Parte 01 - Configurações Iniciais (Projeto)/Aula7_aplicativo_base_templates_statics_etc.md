@@ -1,8 +1,8 @@
 ***Aplicativo Base (templates, statics)***
 
-Dev: Letícia Lima
-
-**Vamos criar nosso primeiro aplicativo base no Django.**
+Dev: Letícia Lima 
+    
+## **Vamos criar nosso primeiro aplicativo base no Django.**
 
 Aplicação ***base*** vamos deixar os arquivos base que é utilizado no projeto inteiro. Como **templates padrão** e **arquivos statics** como **css, js, images estáticas, font, icone**. Coloca as coisas que você não vai mudar ao longo do tempo. 
 
@@ -20,7 +20,7 @@ Agora precisamos registrar nossa aplicação no *PROJECT_APPS*  localizado em *s
 ```python
 ...
 PROJECT_APPS = [
-    'apps.base', # Adiciona app base aqui
+	'apps.base', # Adiciona app base aqui
 ]
 ...
 ```
@@ -57,7 +57,7 @@ Vamos criar um template base para nossa paginas iniciais do projeto.
 
 É aqui que vamos renderizar nosso conteúdo. Para não ter que repetir esse template em todas as paginas que criarmos, então fazemos um base e utilizamos *extends* para usar nos outros templates. 
 
-https://docs.djangoproject.com/pt-br/4.2/ref/templates/language/
+https://docs.djangoproject.com/pt-br/5.1/ref/templates/language/
 
 *base/templates/base.html*
 
@@ -75,18 +75,18 @@ https://docs.djangoproject.com/pt-br/4.2/ref/templates/language/
 
 	<title>{% block title %}{% endblock %}</title>
 	
-	<!-- CSS -->
-	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">	
+	<!-- CSS Boostrap, style -->
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 	<link rel="stylesheet" href="{% static 'css/style.css' %}">
 	
 </head>
 <body>
 	{% block content %}{% endblock %}
-	<!-- JS-->
-	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous"></script>
-	<script src="https://code.jquery.com/jquery-3.6.4.min.js" integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
- 	<script defer src="https://use.fontawesome.com/releases/v5.15.4/js/all.js" integrity="sha384-rOA1PnstxnOBLzCLMcre8ybwbTmemjzdNlILg8O7z1lUkLXozs4DHonlDtnE7fpc" crossorigin="anonymous"></script>
-	<script src="{% static 'js/scripts.js' %}"></script>
+
+	<!-- JS bootstrap, jquery, script-->
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+	<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script> 	<script defer src="https://use.fontawesome.com/releases/v5.15.4/js/all.js" integrity="sha384-rOA1PnstxnOBLzCLMcre8ybwbTmemjzdNlILg8O7z1lUkLXozs4DHonlDtnE7fpc" crossorigin="anonymous"></script>
+	<script src="{% static 'js/script.js' %}"></script>
 	{% block scripts %}{% endblock scripts %}
 </body>
 </html>
@@ -120,4 +120,42 @@ usado para fornecer uma descrição personalizada para ser usada quando o conte�
 
 <meta property="og:image" content="URL da imagem compartilhada nas redes sociais">
 usado para fornecer uma imagem personalizada para ser usada quando o conteúdo do site é compartilhado em redes sociais.
+```
+
+Teste
+
+base/views.py
+
+```python
+from django.shortcuts import render
+
+# Create your views here.  
+def base_view(request):
+	return render(request, 'template.html')
+
+```
+
+base/templates/template.html
+
+```html
+{% extends "base.html" %}
+
+{% block title %}My Amazing blog{% endblock %}
+
+{% block content %}
+<h1>Template Filho</h1> 
+{% endblock %} 
+
+{% block scripts %} 
+{% endblock scripts %}
+```
+
+core/urls.py
+
+```python
+from base.views import base_view
+
+urlpatterns = [ 
+	path('base/', base_view, name='base'),
+]
 ```

@@ -1,7 +1,7 @@
 ***Ambiente Virtual Linux/Windows**
 
-**Dev: Letícia Lima**
-
+**Dev: Letícia Lima** 
+    
 **Criar o ambiente virtual Linux/Windows**
 
 ```bash

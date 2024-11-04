@@ -1,17 +1,15 @@
-# Gerenciador de Senhas
+### Gerenciador de Senhas
 
-**Dev: Letícia Lima**
-
-### Password Reset
-
+**Dev: Letícia Lima**  
+ 
 Primeiro vamos fazer uma configuração no ***core/settings.py*** e adicionar o **EMAIL_BACKEND** do Django, para simular um envio de e-mail para reset de senha.
 
 `EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'`
 
 Documentação: 
-https://docs.djangoproject.com/en/4.1/topics/auth/default/
-https://docs.djangoproject.com/en/4.1/topics/auth/customizing/
-https://docs.djangoproject.com/en/4.2/topics/auth/default/#module-django.contrib.auth.views
+https://docs.djangoproject.com/pt-br/5.1/topics/auth/default/
+https://docs.djangoproject.com/pt-br/5.1/topics/auth/customizing/
+https://docs.djangoproject.com/pt-br/5.1/topics/auth/default/#module-django.contrib.auth.views
 
 Vamos configurar a autenticação da maneira mais simples que conheço com Django.
 
@@ -23,7 +21,7 @@ apps/contas/urls.py
 
 ```python
 urlpatterns = [
-		...
+        ...
     path("", include("django.contrib.auth.urls")),  # Django auth
 ]
 ```
@@ -66,7 +64,7 @@ Esse será nosso template customizado para essa rota. Estamos herdando o templat
 {% extends 'base_auth.html' %}
 {% block title %}Resetar Senha{% endblock %}
 {% block content_auth %}  
-<form method="post">
+<form method="POST">
     {% csrf_token %}
     <div class="mt-3">
         <label class="form-label" for="id_email">Entre com seu e-mail para resetar sua senha.</label>
@@ -81,9 +79,9 @@ Se testarmos agora http://localhost:8000/contas/password_reset/ a rota está red
 
 ```python
 DJANGO_APPS = [
-    'apps.contas', # Adiciona 
+    'apps.contas', # atualiza para ca
     'django.contrib.admin',
-		...
+        ...
 ]
 
 THIRD_APPS = [
@@ -107,7 +105,8 @@ apps/contas/templates/login.html
 <span>Esqueceu sua senha? <a class="text-reset" href="{% url 'password_reset' %}">Resetar</a></span>
 ```
 
-### **Password Reset Confirm**
+- **Password Reset Confirm**
+
 
 Depois de Enviar o e-mail para resetar a senha. O usuário vai acessar a rota para digitar a nova senha. é esse template abaixo que vamos customizar.
 
@@ -119,7 +118,7 @@ apps/contas/templates/registration/password_reset_confirm.html
 {% block content_auth %} 
 {% if validlink %}
 <p>Entre com sua nova senha para resetar.</p>
-<form action="" method="post">
+<form action="" method="POST">
     {% csrf_token %}
     <div class="mt-3">
         {{ form.new_password1.errors }}
@@ -140,7 +139,8 @@ apps/contas/templates/registration/password_reset_confirm.html
 {% endblock %}
 ```
 
-### **Password Reset Complete**
+- **Password Reset Complete**
+
 
 Depois que digitar a nova senha vamos confirmar a mudança e usuário será redirecionado para essa rota. Segue template abaixo.
 
@@ -152,13 +152,14 @@ apps/contas/templates/registration/password_reset_complete.html
 {% block content_auth %} 
 <div class="d-flex text-success">
     <i class="fas fa-check-circle fa-2x"></i>
-		<h3>Sua senha foi alterada com sucesso!</h3>
+    <h3>Sua senha foi alterada com sucesso!</h3>
 </div>
 <p><a href="{% url 'login' %}">Fazer Login</a></p> 
 {% endblock %}
 ```
 
-### **Password Reset Done**
+- **Password Reset Done**
+
 
 apps/contas/templates/registration/password_reset_done.html
 
@@ -171,7 +172,7 @@ apps/contas/templates/registration/password_reset_done.html
 {% endblock %}
 ```
 
-### **Password Change**
+- **Password Change**
 
 Essa rota é quando sabemos a senha e queremos alterar. Lembrando que usuario precisa estar autenticado para acessar essa rota.
 
@@ -180,14 +181,14 @@ Primeiro eu vou criar um change_form.html onde vai ficar o formulário para muda
 apps/contas/templates/registration/change_form.html
 
 ```html
-<form action="" method="post">
+<form action="" method="POST">
     {% csrf_token %} 
     <div class="mt-3">
         {{ form.old_password.errors }}
         <label class="form-label" for="id_old_password">Senha Antiga:</label>
         <input type="password" name="old_password" class="form-control" id="id_old_password">
     </div>
-   
+    
     <div class="mt-3">
         {{ form.new_password1.errors }}
         <label class="form-label" for="id_new_password1">Nova Senha:</label>
@@ -211,10 +212,10 @@ apps/contas/templates/registration/password_change_form.html
 {% extends 'base.html' %}
 {% block title %}Formulário Reset Senha{% endblock %}
 {% block content %}
- <div class="row p-5 bg-light m-5">
+    <div class="row p-5 bg-light m-5">
     <h3>Alterar Senha</h3>
     {% include "registration/change_form.html" %}
- </div>
+    </div>
 {% endblock %}
 ```
 
@@ -224,18 +225,20 @@ Feito isso pode testar: http://localhost:8000/contas/password_change/
 
 A rota está acessivel mas ainda falta configurar template de sucesso quando o formulário for valido e redirecionar para mensagem de sucesso.
 
-### **Password Change Done**
+- **Password Change Done**
+
 
 apps/contas/templates/registration/password_change_done.html
+
 ```python
 {% extends 'base.html' %}
 {% block title %}Reset Ok{% endblock %}
 {% block content %}
 <div class="p-5 bg-light">
-   <div class="d-flex align-items-center gap-3 link-success">
-      <i class="fa fa-check fa-5x"></i>
-      <h3>Sua senha foi alterada com sucesso!</h3>
-   </div> 
+    <div class="d-flex align-items-center gap-3 link-success">
+        <i class="fa fa-check fa-5x"></i>
+        <h3>Sua senha foi alterada com sucesso!</h3>
+    </div> 
 </div>
 {% endblock %}
 ```

@@ -1,6 +1,6 @@
 # **Filtro Postagem**
 
-Dev: Letícia Lima
+Dev: Letícia Lima 
 
 **Vamos adicionar um campo para pesquisar as postagens por titulo.**
 
@@ -8,20 +8,20 @@ Primeiro filtro será na navbar onde temos um input tipo text para pesquisar por
 
 **Segue alguns links da documentação no Django Sobre filtro e tags.**
 
-https://docs.djangoproject.com/en/4.2/ref/templates/builtins/
+https://docs.djangoproject.com/pt-br/5.1/ref/templates/builtins/
 
-https://docs.djangoproject.com/en/4.2/ref/models/querysets/
+https://docs.djangoproject.com/pt-br/5.1/ref/models/querysets/
 
-https://docs.djangoproject.com/en/4.2/howto/custom-template-tags/
+https://docs.djangoproject.com/pt-br/5.1/howto/custom-template-tags/
 
 Primeiro vamos criar uma função genericar e usarmos para filtro. Vou criar um base mesmo. Por que seria uma função generica, pode ser usada com qualquer aplicação e modelo. 
 
-apps/base/filtros.py
+apps/base/urls.py
 
 ```python
 def filtrar_modelo(modelo, **filtros):
     queryset = modelo.objects.all()
-    for campo, valor in filtros.items():
+        for campo, valor in filtros.items():
         lookup = f"{campo}__icontains"
         queryset = queryset.filter(**{lookup: valor})
     return queryset
@@ -39,10 +39,10 @@ def lista_postagem_forum(request):
     titulo_busca = request.GET.get("titulo")
     if titulo_busca:
         filtros["titulo"] = titulo_busca
-		...
-		else:
-		...
-		postagens = filtrar_modelo(models.PostagemForum, **filtros)
+        ...
+        else:
+        ...
+        postagens = filtrar_modelo(models.PostagemForum, **filtros)
     ...
 ```
 
@@ -50,32 +50,34 @@ apps/base/templates/components/navbar.html
 
 ```html
 <input type="search" name="titulo" class="form-control me-2" placeholder="Buscar por título" 
-	aria-label="Search" value="{{ request.GET.titulo }}">
+    aria-label="Search" value="{{ request.GET.titulo }}">
 ```
 
 apps/forum/templates/dash-lista-postagem-forum.html
 
 ```python
 <div class="d-flex justify-content-between mb-3">
-  <div class="hstack gap-3">
+    <div class="hstack gap-3">
 
-      <button class="btn btn-secondary" onclick="location.href='{% url 'criar-postagem-forum' %}'">
-          <i class="fas fa-user mx-2"></i> + Criar Postagem</button>
-      
-      <form class="hstack gap-1" method="GET" action="?">
-          <input type="text" name="titulo" class="form-control" placeholder="Buscar por título" 
-              value="{{ request.GET.titulo }}">
-          <!-- Outros campos de filtro aqui, se necessário -->
-          <button class="btn btn-outline-secondary" type="submit"><i class="fas fa-search"></i></button>
-          {% if request.GET.titulo %}
-          <a href="{% url 'dash-lista-postagem-forum' %}" class="link-secondary">Resetar</a>
-          {% endif %}
-      </form>
+        <button class="btn btn-secondary" onclick="location.href='{% url 'criar-postagem-forum' %}'">
+            <i class="fas fa-user mx-2"></i> + Criar Postagem</button>
+        
+        <form class="hstack gap-1" method="GET" action="?">
+            <input type="text" name="titulo" class="form-control" placeholder="Buscar por título" 
+                value="{{ request.GET.titulo }}">
+            <!-- Outros campos de filtro aqui, se necessário -->
+            <button class="btn btn-outline-secondary" type="submit"><i class="fas fa-search"></i></button>
+            {% if request.GET.titulo %}
+            <a href="{% url 'dash-lista-postagem-forum' %}" class="link-secondary">Resetar</a>
+            {% endif %}
+        </form>
 
-  </div> 
-  <h2>Todas as Postagens </h2>
+    </div> 
+    <h2>Todas as Postagens </h2>
 </div>
 ```
+
+base/urls.py
 
 ```jsx
 from django.db.models import Q
@@ -113,8 +115,8 @@ def perfil_view(request, username):
         
     # Utiliza o modelo das postagens do perfil
     perfil_postagens = filtrar_modelo(perfil_postagens.model, **filtros) # Faz o filtro
-		
-		for el in perfil_postagens:
+        
+        for el in perfil_postagens:
     ...
 ```
 
