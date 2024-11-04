@@ -117,6 +117,7 @@ TEMPLATES = [
                 # Apps
                 'core.context_processors.context_social', 
                 'core.context_processors.context_logo', 
+                'core.context_processors.context_seo', 
             ],
         },
     },

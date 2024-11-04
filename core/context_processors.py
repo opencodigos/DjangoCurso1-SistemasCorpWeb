@@ -1,4 +1,4 @@
-from config.models import Logo
+from config.models import Logo, SEOHome
 
 # from pages import models
 
@@ -7,4 +7,7 @@ def context_social(request):
 
 def context_logo(request):
     return {'logo': Logo.objects.all().first()}
+
+def context_seo(request):
+    return {'seo': SEOHome.objects.all().first()}
 
