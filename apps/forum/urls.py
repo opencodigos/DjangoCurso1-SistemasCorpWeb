@@ -10,4 +10,6 @@ urlpatterns = [
     path('dashboard/lista-postagem/', views.lista_postagem_forum, name='dash-lista-postagem-forum'), 
     # AJAX
     path('remover-imagem/', views.remover_imagem, name='remover-imagem'),
+    
+    path('adicionar-comentario/<str:slug>/', views.adicionar_comentario, name='adicionar-comentario'),
 ]
