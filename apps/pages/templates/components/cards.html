@@ -1,0 +1,28 @@
+{% if bloco.bloco.nome == 'CARDS' %}
+<section>
+    <div class="container py-lg-5">
+        <div class="row justify-content-center pb-5">
+            <div class="col-md-12">
+                <h2 class="mb-3">{{bloco.titulo}}</h2>
+                <p>{{bloco.descricao|default:""}}</p>
+            </div>
+        </div>
+        <div class="row g-4">
+            {% for servico in bloco.conteudo.all %} 
+            <div class="col-md-6 d-flex align-self-stretch">
+                <div class="d-flex gap-4">
+                    <div class="rounded text-white p-5" style="background-color: {{servico.cor_label}}">
+                        <i class="{{servico.icone}}"></i>
+                    </div>
+                    <div class="media-body pl-md-4">
+                        <h3 class="text-dark text-decoration-none mb-3">{{servico.titulo_1}}</h3>
+                        <p>{{servico.descricao_1}}</p>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+                
+        </div>
+    </div>
+</section>
+{% endif %}
