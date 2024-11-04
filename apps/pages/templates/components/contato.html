@@ -1,0 +1,49 @@
+{% if bloco.bloco.nome == 'CONTATO' %}
+<section>
+    <div class="container py-lg-5">
+        <div class="row justify-content-center mb-5 pb-3">
+            <div class="col-md-7 text-center">
+                <h2 class="mb-4">{{bloco.titulo}}</h2>
+            </div>
+        </div> 
+        <div class="row mb-5">
+            {% for contato in bloco.conteudo.all %} 
+            <div class="col">
+                <div class="h-100 align-self-stretch box p-4 text-center bg-light">
+                    <i class="{{contato.icone}} fa-4x"></i>
+                    <h3 class="mb-4">{{contato.titulo_1}}</h3>
+                    <p><a class="link-dark text-decoration-none" href="{{contato.rota_botao_1}}">{{contato.titulo_2}}</a></p>
+                </div>
+            </div>
+            {% endfor %} 
+        </div>
+
+        <div class="">
+            <div class="d-flex">
+                <img src="https://img.freepik.com/fotos-premium/vista-lateral-do-medico-feminino-sorridente_23-2148453487.jpg?w=2000"
+                    width="450" alt="">
+                <form class="row p-5 m-5" action="#" class="bg-light p-5">
+                    <h4>Formulário de Contato</h4>
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Seu nome">
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Seu E-mail">
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Titulo">
+                    </div>
+                    <div class="form-group">
+                        <textarea name="" id="" cols="30" rows="7" class="form-control"
+                            placeholder="Mensagem..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <input type="submit" value="Enviar Mensagem" class="btn btn-secondary py-3 px-5">
+                    </div>
+                </form>
+            </div>
+        </div>
+
+    </div>
+</section>
+{% endif %}
