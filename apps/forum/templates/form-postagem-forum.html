@@ -5,7 +5,7 @@
     <div class="col-md-8">
         <form class="p-3 rounded-3 shadow-sm" method="post" enctype="multipart/form-data">
             {% csrf_token %}
-            <h4>Criar Postagem</h4>
+            <h4>{% if request.path == '/forum/criar-postagem-forum/' %} Criar Postagem {% else %} Editar Postagem {% endif %}</h4>
             {{ form.as_p }}
             <button type="submit" class="btn btn-primary mx-2">Criar</button>
         </form>

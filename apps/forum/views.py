@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.decorators import login_required
 from forum.forms import PostagemForumForm
 from django.contrib import messages  
 from forum import models
@@ -31,3 +32,17 @@ def detalhe_postagem_forum(request, id):
     postagem = get_object_or_404(models.PostagemForum, id=id)
     return render(request, 'detalhe-postagem-forum.html', {'postagem': postagem})
 
+
+# Edtar Postagem
+@login_required 
+def editar_postagem_forum(request, id):
+    postagem = get_object_or_404(models.PostagemForum, id=id)
+    if request.method == 'POST':
+        form = PostagemForumForm(request.POST, instance=postagem)
+        if form.is_valid():
+            form.save()
+            messages.warning(request, 'Seu Post '+ postagem.titulo +' foi atualizado com sucesso!')
+            return redirect('editar-postagem-forum', id=postagem.id)
+    else:
+        form = PostagemForumForm(instance=postagem)
+    return render(request, 'form-postagem-forum.html', {'form': form})
