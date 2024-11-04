@@ -82,6 +82,7 @@ PROJECT_APPS = [ # são os apps que criamos no projeto
     'apps.config',
     'apps.pages',
     'apps.perfil',
+    'apps.forum',
 ]
 
 # INSTALLED_APPS é a variavel que django entende para fazer a leitura dos aplicativos então verifica a nomencratura.
