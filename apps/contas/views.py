@@ -1,8 +1,10 @@
+from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from django.contrib.auth.decorators import login_required 
 from django.contrib.auth.models import Group 
 from django.contrib.auth.forms import PasswordChangeForm 
+from django.core.mail import send_mail
 from django.shortcuts import render, redirect, get_object_or_404
 from contas.models import MyUser
 from contas.forms import CustomUserCreationForm, UserChangeForm
@@ -55,14 +57,26 @@ def register_view(request):
         if form.is_valid(): # se formulário for valido registra usuário
             usuario = form.save(commit=False)
             usuario.is_valid = False
+            usuario.is_active = False # Adiciona isso. 
             usuario.save()
 
             group = Group.objects.get(name='usuario')
             usuario.groups.add(group)
             
             Perfil.objects.create(usuario=usuario) # Cria instancia perfil do usuário
+             
+            # Envia e-mail para usuário
+            send_mail( # Envia email para usuario
+                'Cadastro Plataforma',
+                f'Olá, {usuario.first_name}, em breve você receberá um e-mail de \
+                    aprovação para usar a plataforma.',
+                'email@email.com', # De (em produção usar o e-mail que está no settings)
+                [usuario.email], # para
+                fail_silently=False,
+            )
             
-            messages.success(request, 'Registrado. Agora faça o login para começar!')
+            messages.success(request, 'Registrado. Um e-mail foi enviado \
+                para administrador aprovar. Aguarde contato')
             
             return redirect('login') # Redireciona para login
         else:
@@ -95,7 +109,24 @@ def atualizar_usuario(request, username):
     if request.method == 'POST':
         form = UserChangeForm(request.POST, instance=user, user=request.user)
         if form.is_valid():
-            form.save()
+            usuario = form.save()
+             
+            if user.is_active: ## se usuario for ativado a gente muda o status para True e envia e-mail
+                usuario.is_active = True # muda status para True (Aprovado)
+                print(usuario.is_active)
+                # Envia e-mail avisando usuário.
+                send_mail( # Envia email para usuario
+                    'Cadastro Aprovado',
+                    f'Olá, {usuario.first_name}, seu e-mail foi aprovado na plataforma.',
+                    settings.DEFAULT_FROM_EMAIL, # De (em produção usar o e-mail que está no settings)
+                    [usuario.email], # para
+                    fail_silently=False,
+                )
+                messages.success(request, 'O usuário '+ usuario.email +'\
+                    foi atualizado com sucesso!')
+                return redirect('lista_usuarios')
+            
+            usuario.save()   
             messages.success(request, 'O perfil de usuário foi atualizado com sucesso!')
             return redirect('home')
     else:
