@@ -1,7 +1,8 @@
 import re
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
-from django.http import JsonResponse
+from django.http import JsonResponse  
+from django.core.paginator import Paginator
 from forum.forms import PostagemForumForm
 from django.contrib import messages  
 from forum import models
@@ -96,28 +97,39 @@ def deletar_postagem_forum(request, id):
     return JsonResponse({'status':message}) 
 
 
-# Lista de Postagens no Dashboard (Gerenciar)
+# Lista de Postagens no Dashboard (Gerenciar) 
 def lista_postagem_forum(request):
     form_dict = {}
-    if request.path == '/forum/': # Pagina forum da home, mostrar tudo ativo.
+    if request.path == '/forum/':
         postagens = models.PostagemForum.objects.filter(ativo=True)
-        template_view = 'lista-postagem-forum.html' # lista de post da rota /forum/
-    else: # Essa parte mostra no Dashboard
-        user = request.user 
-        template_view = 'dashboard/dash-lista-postagem-forum.html' # template novo que vamos criar 
+        template_view = 'lista-postagem-forum.html'
+    else:
+        user = request.user
+        template_view = 'dashboard/dash-lista-postagem-forum.html'
         if ['administrador', 'colaborador'] in user.groups.all() or user.is_superuser:
-            # Usuário é administrador ou colaborador, pode ver todas as postagens
             postagens = models.PostagemForum.objects.filter(ativo=True)
         else:
-            # Usuário é do grupo usuário, pode ver apenas suas próprias postagens
             postagens = models.PostagemForum.objects.filter(usuario=user)
-    
+        
     for el in postagens:
         form = PostagemForumForm(instance=el) 
-        form_dict[el] = form
+        form_dict[el] = form 
         
-    context = {'postagens': postagens,'form_dict': form_dict}
-    return render(request, template_view, context) 
+    # Criar uma lista de tuplas (postagem, form) a partir do form_dict
+    form_list = [(postagem, form) for postagem, form in form_dict.items()]
+    
+    # Aplicar a paginação à lista de tuplas
+    paginacao = Paginator(form_list, 3) # '3' é numero de registro por pagina
+    
+    # Obter o número da página a partir dos parâmetros da URL
+    pagina_numero = request.GET.get("page")
+    page_obj = paginacao.get_page(pagina_numero)
+    
+    # Criar um novo dicionário form_dict com base na página atual
+    form_dict = {postagem: form for postagem, form in page_obj}
+    
+    context = {'page_obj': page_obj, 'form_dict': form_dict}
+    return render(request, template_view, context)
 
 
 def remover_imagem(request):
