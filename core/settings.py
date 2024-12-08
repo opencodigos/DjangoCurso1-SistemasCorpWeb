@@ -200,9 +200,7 @@ REQUESTLOGS = {
 
 LOGIN_URL = 'login'
 LOGIN_REDIRECT_URL = '/'
-LOGOUT_REDIRECT_URL = '/'
-
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+LOGOUT_REDIRECT_URL = '/'  
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
@@ -235,6 +233,8 @@ MEDIA_URL = '/media/'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 # Se tiver configuração de email
 EMAIL_HOST = os.getenv('EMAIL_HOST')

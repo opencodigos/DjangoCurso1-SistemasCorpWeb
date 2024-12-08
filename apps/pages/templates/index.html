@@ -12,4 +12,39 @@
     {% include "components/footer.html" %} 
   {% endfor %}
 
-{% endblock %}
+{% endblock %}  
+
+{% block scripts %}
+<script>
+  console.log("ok")
+  document.getElementById('form-contato').addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      const nome = document.getElementById('nome').value;
+      const email = document.getElementById('email').value;
+      const titulo = document.getElementById('titulo').value;
+      const mensagem = document.getElementById('mensagem').value;
+
+      fetch("{% url 'enviar_contato' %}", {
+          method: "POST",
+          headers: {
+              "Content-Type": "application/json",
+              "X-CSRFToken": "{{ csrf_token }}",
+          },
+          body: JSON.stringify({ nome, email, titulo, mensagem }),
+      })
+      .then(response => response.json())
+      .then(data => {
+          if (data.error) {
+              document.getElementById('resultado').innerHTML = `<p class="text-danger">${data.error}</p>`;
+          } else {
+              document.getElementById('resultado').innerHTML = `<p class="text-success">${data.message}</p>`;
+              document.getElementById('form-contato').reset();
+          }
+      })
+      .catch(error => {
+          document.getElementById('resultado').innerHTML = `<p class="text-danger">Erro ao enviar mensagem.</p>`;
+      });
+  });
+</script> 
+{% endblock scripts %} 
